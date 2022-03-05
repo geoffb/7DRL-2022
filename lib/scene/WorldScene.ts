@@ -28,6 +28,8 @@ function mapY(y: number): number {
 export class WorldScene extends Scene {
   private world: World;
 
+  private worldView: Actor;
+
   private tileset: SpriteSheet;
 
   private sprites: SpriteSheet;
@@ -216,11 +218,7 @@ export class WorldScene extends Scene {
       this.animatePlayerHumanityRestore.bind(this)
     );
 
-    this.tileset = new SpriteSheet(
-      this.images.get("images/forest.png"),
-      16,
-      16
-    );
+    this.tileset = new SpriteSheet(this.images.get("images/sewer.png"), 16, 16);
     this.sprites = new SpriteSheet(
       this.images.get("images/sprites.png"),
       16,
@@ -232,21 +230,24 @@ export class WorldScene extends Scene {
       8
     );
 
+    this.worldView = new Actor();
+    this.addChild(this.worldView);
+
     // this.mapView = new SpriteGrid(this.tileset);
     this.mapView = new TileMap(
       this.width,
       this.height - UIBarHeight,
       this.tileset
     );
-    this.addChild(this.mapView);
+    this.worldView.addChild(this.mapView);
 
     // Init unit layer
     this.unitLayer = new Actor();
     this.unitLayer.position.y = UIBarHeight;
-    this.addChild(this.unitLayer);
+    this.worldView.addChild(this.unitLayer);
 
     // UI bars
-    const topBar = new Box(this.width, UIBarHeight, "#231F34");
+    const topBar = new Box(this.width, UIBarHeight, Palette.Black);
     topBar.position.set(this.width / 2, UIBarHeight / 2);
     this.addChild(topBar);
 
@@ -271,7 +272,7 @@ export class WorldScene extends Scene {
     this.floorValue.position.set(152, 0);
     this.addChild(this.floorValue);
 
-    this.messageBG = new Box(this.width, UIBarHeight, "#44283C");
+    this.messageBG = new Box(this.width, UIBarHeight, "#D27D2C");
     this.messageBG.visible = false;
     this.addChild(this.messageBG);
 
@@ -397,7 +398,7 @@ export class WorldScene extends Scene {
     if (offsetX === 0) {
       // Vertical
       const targetX = mapX(target.x);
-      const targetY = mapY(target.y);
+      const targetY = mapY(target.y) - 4;
       tween.to(
         {
           x: targetX,
@@ -409,9 +410,9 @@ export class WorldScene extends Scene {
     } else {
       // Horizontal
       const halfX = lerp(sprite.position.x, mapX(target.x), 0.5);
-      const halfY = mapY(target.y) - 4;
+      const halfY = mapY(target.y) - 8;
       const targetX = mapX(target.x);
-      const targetY = mapY(target.y);
+      const targetY = mapY(target.y) - 4;
       tween
         .to(
           {
@@ -740,7 +741,7 @@ export class WorldScene extends Scene {
       .wait(500)
       .call(() => {
         this.showMessage("RISE!");
-        this.shake(this, 1000, 10, 1);
+        this.shake(this.worldView, 1000, 10, 1);
       })
       .wait(650)
       .call(() => this.sounds.play("portal6"))
@@ -785,7 +786,7 @@ export class WorldScene extends Scene {
       cost.position.set(-cost.width / 2, -16);
       sprite.addChild(cost);
     }
-    sprite.position.set(mapX(unit.position.x), mapY(unit.position.y));
+    sprite.position.set(mapX(unit.position.x), mapY(unit.position.y) - 4);
     sprite.drawOrder = unit.info.drawOrder;
     this.unitSprites.set(unit.id, sprite);
     this.unitLayer.addChild(sprite);

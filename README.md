@@ -1,4 +1,6 @@
-# Roguelike Shell
+# Sewermancer
+
+A game for [7DRL Challenge 2022](https://itch.io/jam/7drl-challenge-2022).
 
 ## Development
 

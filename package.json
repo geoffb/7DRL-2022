@@ -3,7 +3,7 @@
   "scripts": {
     "build": "tsc && rollup -c",
     "clean": "rm -rf build dist htdocs/main.js",
-    "deploy": "butler push dist/build.zip gosub/catacombs:web",
+    "deploy": "butler push dist/build.zip gosub/sewermancer:web",
     "develop": "tsc && concurrently \"tsc --skipLibCheck --incremental --watch\" \"rollup -c -w\" \"http-server htdocs\"",
     "lint": "prettier --check .",
     "format": "prettier --write .",

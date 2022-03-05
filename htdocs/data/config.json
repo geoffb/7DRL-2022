@@ -9,7 +9,7 @@
   "preload": {
     "data": [
       "data/prefabs.json",
-      "data/tilesets/forest.json",
+      "data/tilesets/sewer.json",
       "data/maps/cemetery1.json",
       "data/maps/crypt0.json",
       "data/maps/crypt1.json",
@@ -22,7 +22,7 @@
       "images/title.png",
       "images/sprites.png",
       "images/sprites-small.png",
-      "images/forest.png"
+      "images/sewer.png"
     ],
     "sounds": {
       "damage1": "sounds/damage1.wav",

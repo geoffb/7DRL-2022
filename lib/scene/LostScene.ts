@@ -1,4 +1,5 @@
 import { Box, Scene, SpriteText } from "@mousepox/jack";
+import { Palette } from "./ui/Palette";
 
 export class LostScene extends Scene {
   private score: SpriteText;
@@ -23,7 +24,7 @@ export class LostScene extends Scene {
 
   protected init() {
     // Background
-    const bg = new Box(this.width, this.height, "#44283C");
+    const bg = new Box(this.width, this.height, Palette.Red);
     bg.position.set(this.width / 2, this.height / 2);
     this.addChild(bg);
 

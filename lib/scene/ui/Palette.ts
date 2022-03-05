@@ -1,4 +1,6 @@
 export const enum Palette {
-  Black = "#231F34",
-  Red = "#44283C",
+  Black = "#140C1C",
+  White = "#DEEED6",
+  Red = "#D04648",
+  Green = "#346524",
 }

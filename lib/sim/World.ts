@@ -190,7 +190,7 @@ export class World {
     }
 
     // Parse tileset data
-    const tileset = data.get("data/tilesets/forest.json");
+    const tileset = data.get("data/tilesets/sewer.json");
     this.walkableTiles = getWalkableTiles(tileset);
   }
 

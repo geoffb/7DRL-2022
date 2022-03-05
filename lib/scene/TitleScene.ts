@@ -2,12 +2,13 @@ import {
   Box,
   Scene,
   Sprite,
-  SpriteGrid,
+  // SpriteGrid,
   SpriteSheet,
   SpriteText,
 } from "@mousepox/jack";
-import { Grid } from "@mousepox/math";
+// import { Grid } from "@mousepox/math";
 import { IPoint } from "@mousepox/math";
+import { Palette } from "./ui/Palette";
 
 export const enum TitleOption {
   NewGame,
@@ -93,22 +94,22 @@ export class TitleScene extends Scene {
     );
 
     // Init background
-    const bg = new Box(this.width, this.height, "#231F34");
+    const bg = new Box(this.width, this.height, Palette.Green);
     bg.position.set(this.width / 2, this.height / 2);
     this.addChild(bg);
 
-    const decoGrid = new Grid(16, 2);
-    decoGrid.cells = [
-      4, 4, 4, 4, 4, 4, 5, -1, -1, 5, 4, 4, 4, 4, 4, 4, 0, 1, 0, 0, 2, 0, 0, 6,
-      6, 0, 0, 2, 0, 0, 1, 0,
-    ];
-
-    const deco = new SpriteGrid(tiles, decoGrid);
-    deco.position.set(128, this.height - 16);
-    this.addChild(deco);
+    //     const decoGrid = new Grid(16, 2);
+    //     decoGrid.cells = [
+    //       4, 4, 4, 4, 4, 4, 5, -1, -1, 5, 4, 4, 4, 4, 4, 4, 0, 1, 0, 0, 2, 0, 0, 6,
+    //       6, 0, 0, 2, 0, 0, 1, 0,
+    //     ];
+    //
+    //     const deco = new SpriteGrid(tiles, decoGrid);
+    //     deco.position.set(128, this.height - 16);
+    //     this.addChild(deco);
 
     // Game title
-    const title = new SpriteText("Catacombs", 24);
+    const title = new SpriteText("Sewermancer", 16);
     title.position.set(this.width / 2 - title.width / 2, 16);
     this.addChild(title);
 

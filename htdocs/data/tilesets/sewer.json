@@ -1,9 +1,9 @@
 { "columns":8,
- "image":"..\/..\/images\/forest.png",
+ "image":"..\/..\/images\/sewer.png",
  "imageheight":128,
  "imagewidth":128,
  "margin":0,
- "name":"Forest",
+ "name":"Sewer",
  "spacing":0,
  "tilecount":64,
  "tiledversion":"1.8.2",
@@ -11,15 +11,6 @@
  "tiles":[
         {
          "id":0,
-         "properties":[
-                {
-                 "name":"walk",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":1,
          "properties":[
                 {
                  "name":"walk",
