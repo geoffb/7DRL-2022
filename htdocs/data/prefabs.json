@@ -1,0 +1,415 @@
+{
+  "player": {
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Player",
+    "role": "player",
+    "solid": true,
+    "sprite": 15
+  },
+
+  "playerAlive": {
+    "drawOrder": 3,
+    "health": 3,
+    "name": "Player",
+    "role": "player",
+    "solid": true,
+    "sprite": 30
+  },
+
+  "key": {
+    "data": {
+      "cost": 75,
+      "pickup": {
+        "amount": 1,
+        "type": "key"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Key",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 8
+  },
+
+  "door": {
+    "data": "key",
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Door",
+    "role": "door",
+    "solid": true,
+    "sprite": 9
+  },
+
+  "crown": {
+    "data": {
+      "pickup": {
+        "amount": 250,
+        "type": "gold"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Crown",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 10
+  },
+
+  "bat": {
+    "behavior": "random",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Bat",
+    "role": "monster",
+    "solid": true,
+    "sprite": 29
+  },
+
+  "zombie": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Zombie",
+    "role": "monster",
+    "solid": true,
+    "sprite": 31
+  },
+
+  "ghoul": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 2,
+    "name": "Ghoul",
+    "role": "monster",
+    "solid": true,
+    "sprite": 39
+  },
+
+  "giant_skeleton": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 2,
+    "name": "Giant Skeleton",
+    "role": "monster",
+    "solid": true,
+    "sprite": 49
+  },
+
+  "spikes": {
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Spikes",
+    "role": "trap",
+    "solid": false,
+    "sprite": 16
+  },
+
+  "spikesH": {
+    "behavior": "trap_horz",
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Spikes Horizontal",
+    "role": "trap",
+    "solid": false,
+    "sprite": 18
+  },
+
+  "spikesV": {
+    "behavior": "trap_vert",
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Spikes Vertical",
+    "role": "trap",
+    "solid": false,
+    "sprite": 19
+  },
+
+  "heart": {
+    "data": {
+      "cost": 50,
+      "heal": 1
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Heart",
+    "role": "restore_health",
+    "solid": false,
+    "sprite": 11
+  },
+
+  "powerGloves": {
+    "data": "powerGloves",
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Power Gloves",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 12
+  },
+
+  "powerBlock": {
+    "drawOrder": 3,
+    "health": null,
+    "name": "Power Gloves",
+    "role": "monster",
+    "solid": true,
+    "sprite": 17
+  },
+
+  "candles": {
+    "data": {
+      "loot": "loot_doodad"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Candles",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 33
+  },
+
+  "altar": {
+    "data": {
+      "loot": "loot_doodad"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Altar",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 44
+  },
+
+  "pot": {
+    "data": {
+      "loot": "loot_pot"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Pot",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 34
+  },
+
+  "chest": {
+    "data": {
+      "loot": "loot_chest"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Chest",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 35
+  },
+
+  "elixir_life": {
+    "data": {
+      "cost": 500,
+      "pickup": {
+        "amount": 200,
+        "type": "food"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Elixir of Life",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 32
+  },
+
+  "elixir_health": {
+    "data": { "cost": 150, "heal": 3 },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Elixir of Healing",
+    "role": "restore_health",
+    "solid": false,
+    "sprite": 43
+  },
+
+  "ghost": {
+    "behavior": "hunt",
+    "drawOrder": 3,
+    "health": null,
+    "name": "Ghost",
+    "role": "trap",
+    "solid": false,
+    "sprite": 13
+  },
+
+  "stairsDown": {
+    "data": {
+      "warp": "down"
+    },
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Stairs Down",
+    "role": "warp",
+    "solid": false,
+    "sprite": 24
+  },
+
+  "stairsUp": {
+    "data": {
+      "warp": "up"
+    },
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Stairs Up",
+    "role": "warp",
+    "solid": false,
+    "sprite": 25
+  },
+
+  "campfire": {
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Campfire",
+    "role": "trap",
+    "solid": false,
+    "sprite": 28
+  },
+
+  "flame": {
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Campfire",
+    "role": "trap",
+    "solid": false,
+    "sprite": 23
+  },
+
+  "monsterSpawn": {
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Monster Spawn",
+    "solid": false,
+    "sprite": -1
+  },
+
+  "shopSpawn": {
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Shop Spawn",
+    "solid": false,
+    "sprite": -1
+  },
+
+  "shopkeeper": {
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Shopkeeper",
+    "role": "monster",
+    "solid": true,
+    "sprite": 38
+  },
+
+  "spider": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Spider",
+    "role": "monster",
+    "solid": true,
+    "sprite": 48
+  },
+
+  "bread": {
+    "data": {
+      "cost": 150,
+      "pickup": {
+        "amount": 75,
+        "type": "food"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Bread",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 40
+  },
+
+  "cheese": {
+    "data": {
+      "cost": 300,
+      "pickup": {
+        "amount": 150,
+        "type": "food"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Cheese",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 41
+  },
+
+  "carrot": {
+    "data": {
+      "cost": 50,
+      "pickup": {
+        "amount": 25,
+        "type": "food"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Carrot",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 42
+  },
+
+  "gold1": {
+    "data": {
+      "pickup": {
+        "amount": 25,
+        "type": "gold"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Gold",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 36
+  },
+
+  "gold2": {
+    "data": {
+      "pickup": {
+        "amount": 100,
+        "type": "gold"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Bag of Gold",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 37
+  }
+}

@@ -1,0 +1,11 @@
+# Nova
+.nova/
+
+# Build artifacts
+build/
+htdocs/main.js
+dist/
+
+# Tiled files
+htdocs/data/maps/*.json
+htdocs/data/tilesets/*.json

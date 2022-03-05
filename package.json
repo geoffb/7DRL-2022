@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "tsc && rollup -c",
+    "clean": "rm -rf build dist htdocs/main.js",
+    "deploy": "butler push dist/build.zip gosub/catacombs:web",
+    "develop": "tsc && concurrently \"tsc --skipLibCheck --incremental --watch\" \"rollup -c -w\" \"http-server htdocs\"",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
+    "release": "yarn lint && yarn clean && yarn build && yarn zip && yarn deploy",
+    "zip": "mkdir -p dist && cd htdocs; zip -r ../dist/build.zip *"
+  },
+  "dependencies": {
+    "@mousepox/jack": "^0.6.6",
+    "@mousepox/math": "^1.6.1",
+    "@mousepox/tween": "^0.3.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "concurrently": "^7.0.0",
+    "http-server": "^14.1.0",
+    "prettier": "^2.5.1",
+    "rollup": "^2.68.0",
+    "typescript": "^4.5.5"
+  }
+}
