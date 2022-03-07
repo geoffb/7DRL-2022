@@ -11,6 +11,7 @@
     "zip": "mkdir -p dist && cd htdocs; zip -r ../dist/build.zip *"
   },
   "dependencies": {
+    "@mousepox/dungen": "^0.2.0",
     "@mousepox/jack": "^0.6.6",
     "@mousepox/math": "^1.6.1",
     "@mousepox/tween": "^0.3.0"

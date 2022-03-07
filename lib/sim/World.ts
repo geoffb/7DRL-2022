@@ -24,6 +24,7 @@ import {
   UnitBehavior,
   UnitRole,
 } from "./Unit";
+import { Level } from "./gen/Level";
 
 /** Action types emitted by the world */
 export const enum WorldAction {
@@ -154,6 +155,8 @@ export class World {
     exit: { x: 0, y: 0 },
   };
 
+  private readonly level: Level;
+
   /** Cache of JSON encoded map data */
   private readonly mapCache: Map<number, string> = new Map();
 
@@ -181,6 +184,8 @@ export class World {
     this.data = data;
     this.config = data.get("data/config.json");
     this.prefabs = data.get("data/prefabs.json");
+
+    this.level = new Level(data.get("data/rooms.json"));
 
     this.player = this.createUnit("player");
 
@@ -321,16 +326,16 @@ export class World {
 
   /** Step the world by a single iteration */
   public step() {
-    // The player consumes a food resource for every world step when alive
-    if (
-      this.player.type === "playerAlive" &&
-      !this.player.asleep &&
-      !this.removePlayerInventory("food", 1)
-    ) {
-      this.damageUnit(this.player, 1);
-      this.onAction(WorldAction.PlayerStarve);
-      this.addPlayerInventory("food", 20);
-    }
+    // // The player consumes a food resource for every world step when alive
+    // if (
+    //   this.player.type === "playerAlive" &&
+    //   !this.player.asleep &&
+    //   !this.removePlayerInventory("food", 1)
+    // ) {
+    //   this.damageUnit(this.player, 1);
+    //   this.onAction(WorldAction.PlayerStarve);
+    //   this.addPlayerInventory("food", 20);
+    // }
 
     // Update units
     this.units.forEach((unit) => {
@@ -339,6 +344,14 @@ export class World {
       }
       this.updateUnit(unit);
     });
+
+    // Poison mechanic
+    if (this.steps % 10 === 0) {
+      const poisonDamage = Math.floor(this.inventory.get("poison") / 10);
+      if (poisonDamage > 0) {
+        this.damageUnit(this.player, poisonDamage, "poison");
+      }
+    }
 
     this.checkGameOver();
   }
@@ -409,6 +422,28 @@ export class World {
   }
 
   private generateMap(floor: number) {
+    this.level.generate(2, 3);
+
+    this.map.resize(this.level.map.width, this.level.map.height);
+    this.map.copy(this.level.map);
+
+    for (const entity of this.level.entities) {
+      // Update map context
+      switch (entity.type) {
+        case "stairsDown":
+          this.mapContext.exit.x = entity.x;
+          this.mapContext.exit.y = entity.y;
+          break;
+        case "stairsUp":
+          this.mapContext.enter.x = entity.x;
+          this.mapContext.enter.y = entity.y;
+          break;
+      }
+      this.spawnUnit(entity.type, entity.x, entity.y);
+    }
+
+    return;
+
     this.affix = undefined;
     if (floor === 0) {
       // DEBUG: Uncomment to force a specific map/variant
@@ -587,9 +622,15 @@ export class World {
     }
   }
 
-  private damageUnit(unit: Unit, amount: number) {
+  private damageUnit(unit: Unit, amount: number, source?: string) {
     unit.health -= amount;
-    this.onAction(WorldAction.UnitHealthChange, unit.id, -amount, unit.health);
+    this.onAction(
+      WorldAction.UnitHealthChange,
+      unit.id,
+      -amount,
+      unit.health,
+      source
+    );
 
     // Handle unit death
     if (unit.health < 1) {
@@ -762,7 +803,7 @@ export class World {
   }
 
   /** Returns whether a given tile is blocked */
-  private isBlockedXY(x: number, y: number): boolean {
+  private isBlockedXY(x: number, y: number, forceEmpty = false): boolean {
     // Check for non-walkable tiles
     const tile = this.map.get(x, y);
     if (this.walkableTiles.indexOf(tile) === -1) {
@@ -771,7 +812,7 @@ export class World {
 
     // Check for solid units
     const unit = this.getUnitAt(x, y);
-    if (unit !== undefined && unit.info.solid) {
+    if (unit !== undefined && (unit.info.solid || forceEmpty)) {
       return true;
     }
 
@@ -839,6 +880,10 @@ export class World {
 
     // Act
     switch (unit.info.behavior) {
+      case UnitBehavior.Replicate:
+        this.behaviorReplicate(unit);
+        break;
+
       case UnitBehavior.Random:
         this.behaviorRandom(unit);
         break;
@@ -996,6 +1041,72 @@ export class World {
         }
         this.moveUnit(unit, unit.data.dir);
         break;
+      }
+    }
+  }
+
+  private behaviorReplicate(unit: Unit) {
+    if (unit.data.age === undefined) {
+      unit.data.age = Math.floor(Math.random() * 10);
+    }
+
+    const others = this.getUnitsAt(unit.position.x, unit.position.y);
+    for (const other of others) {
+      if (other !== undefined && other.info.role === UnitRole.Player) {
+        this.addPlayerInventory("poison", 1);
+      }
+    }
+
+    unit.data.age++;
+    if (unit.data.age < 10) {
+      return;
+    }
+
+    let neighbors = 0;
+    for (let y = unit.position.y - 1; y <= unit.position.y + 1; y++) {
+      for (let x = unit.position.x - 1; x <= unit.position.x + 1; x++) {
+        if (x === unit.position.x && y === unit.position.y) {
+          continue;
+        }
+        const other = this.getUnitAt(x, y);
+        if (other !== undefined && other.type === unit.type) {
+          neighbors++;
+        }
+      }
+    }
+
+    if (neighbors < 1 || neighbors > 5) {
+      // Die from solitude or overpopulation
+      if (neighbors >= 8) {
+        for (let y = unit.position.y - 1; y <= unit.position.y + 1; y++) {
+          for (let x = unit.position.x - 1; x <= unit.position.x + 1; x++) {
+            const other = this.getUnitAt(x, y);
+            if (other !== undefined && other.type === unit.type) {
+              this.removeUnit(other);
+              this.onAction(WorldAction.UnitDie, other.id, other.type);
+            }
+          }
+        }
+        this.spawnUnit("slime", unit.position.x, unit.position.y);
+      } else {
+        this.removeUnit(unit);
+        this.onAction(WorldAction.UnitDie, unit.id, unit.type);
+      }
+    } else if (unit.data.age > 5 && (neighbors > 1 || neighbors < 3)) {
+      // Replicate
+      unit.data.age = -2;
+      const points: IPoint[] = [];
+      for (let y = unit.position.y - 1; y <= unit.position.y + 1; y++) {
+        for (let x = unit.position.x - 1; x <= unit.position.x + 1; x++) {
+          if (!this.isBlockedXY(x, y, true)) {
+            points.push({ x, y });
+          }
+        }
+      }
+      if (points.length > 0) {
+        const point = this.rng.choice(points);
+        const spawn = this.spawnUnit(unit.type, point.x, point.y);
+        spawn.data.age = 0;
       }
     }
   }

@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@mousepox/dungen@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@mousepox/dungen/-/dungen-0.2.0.tgz#c2769a2eafa1d578f1c04c72bb88343c0592fb0b"
+  integrity sha512-09Uf+kRnERWNDKFYY89PMwWoK154CKsCz0QU060vGFsK89QkCULxlwFgQH/tqRH+zcA/gT76iIpVKGv9dc74ug==
+  dependencies:
+    "@mousepox/math" "^1.1.0"
+
 "@mousepox/jack@^0.6.6":
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/@mousepox/jack/-/jack-0.6.6.tgz#e1d5756401e6cdf8a3a0f9c09aec314ac9e1df06"
@@ -11,7 +18,7 @@
     "@mousepox/tween" "^0.3.0"
     howler "^2.2.0"
 
-"@mousepox/math@^1.6.0", "@mousepox/math@^1.6.1":
+"@mousepox/math@^1.1.0", "@mousepox/math@^1.6.0", "@mousepox/math@^1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@mousepox/math/-/math-1.6.1.tgz#834916ac6be0acc3df345f70cce2ce92270bb926"
   integrity sha512-ljL4lGczTsziROHpp1Mf4Yn94FhciqCavEXI1bIWJugPcO5bkiKX3usMMqBYlPdMx1vxBiWzHkzYiFbgonMxkw==

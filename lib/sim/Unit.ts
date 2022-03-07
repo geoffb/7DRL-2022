@@ -11,6 +11,7 @@ export const enum UnitBehavior {
   FireSpout = "fire_spout",
   StraightThenTurn = "straight_then_turn",
   Spawner = "spawner",
+  Replicate = "replicate",
 }
 
 export const enum UnitRole {
@@ -43,6 +44,7 @@ export interface IUnitInfo {
   solid: boolean;
   sprite: number;
   corpse?: string;
+  flat?: boolean;
 }
 
 /** A unit is a single entity within the world */

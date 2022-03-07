@@ -1,7 +1,7 @@
 {
   "player": {
     "drawOrder": 3,
-    "health": 1,
+    "health": 20,
     "name": "Player",
     "role": "player",
     "solid": true,
@@ -15,6 +15,29 @@
     "role": "player",
     "solid": true,
     "sprite": 30
+  },
+
+  "mold": {
+    "behavior": "replicate",
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Mold",
+    "solid": false,
+    "sprite": 0,
+    "flat": true
+  },
+
+  "slime": {
+    "behavior": "random",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Slime",
+    "role": "monster",
+    "solid": true,
+    "sprite": 1
   },
 
   "key": {
@@ -264,7 +287,8 @@
     "name": "Stairs Down",
     "role": "warp",
     "solid": false,
-    "sprite": 24
+    "sprite": 24,
+    "flat": true
   },
 
   "stairsUp": {

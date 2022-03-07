@@ -8,8 +8,11 @@
   "entryScene": "title",
   "preload": {
     "data": [
+      "data/automap.json",
+      "data/rooms.json",
       "data/prefabs.json",
       "data/tilesets/sewer.json",
+      "data/maps/plus.json",
       "data/maps/cemetery1.json",
       "data/maps/crypt0.json",
       "data/maps/crypt1.json",
@@ -45,7 +48,7 @@
 
   "start": "cemetery1",
   "bags": {
-    "maps_floors": ["crypt0", "crypt1", "crypt2", "crypt3"],
+    "maps_floors": ["plus"],
     "maps_rest": ["cryptShop"],
     "affixes": ["combust", "vengeful"],
     "shop": ["bread", "cheese", "elixir_health", "elixir_life", "key"],

@@ -7,7 +7,13 @@ import {
   SpriteText,
   TileMap,
 } from "@mousepox/jack";
-import { IPoint, lerp, Vector2 } from "@mousepox/math";
+import {
+  IPoint,
+  lerp,
+  Vector2,
+  AutoGrid,
+  IAutoGridRules,
+} from "@mousepox/math";
 import { Ease, Tween } from "@mousepox/tween";
 import { Unit, UnitRole } from "../sim/Unit";
 import { Direction, World, WorldAction } from "../sim/World";
@@ -36,6 +42,8 @@ export class WorldScene extends Scene {
 
   private icons: SpriteSheet;
 
+  private autoMap: AutoGrid;
+
   private mapView: TileMap;
 
   private unitSprites: Map<number, Sprite> = new Map();
@@ -43,6 +51,8 @@ export class WorldScene extends Scene {
   private unitLayer: Actor;
 
   private healthValue: IconValue;
+
+  private poisonValue: IconValue;
 
   private foodValue: IconValue;
 
@@ -55,6 +65,8 @@ export class WorldScene extends Scene {
   private message: SpriteText;
 
   private messageBG: Box;
+
+  private acceptInput = true;
 
   private overlay: Box;
 
@@ -77,10 +89,14 @@ export class WorldScene extends Scene {
     this.overlay.visible = false;
 
     this.healthValue.set(String(world.player.health));
-    this.foodValue.set("-");
+    // this.foodValue.set("-");
+    this.poisonValue.set("0");
     this.keysValue.set("0");
     this.floorValue.set("0");
     this.goldValue.set("0");
+
+    this.autoMap.resize(world.map.width, world.map.height);
+    this.autoMap.update();
 
     // Clear unit sprites
     this.unitSprites.forEach((sprite) => sprite.dispose());
@@ -100,14 +116,17 @@ export class WorldScene extends Scene {
     // Pipe world events into the action queue
     world.onAction = (type, ...params) => {
       // HACK: For non-player actions to animate immediately
-      const immediate =
-        type === WorldAction.UnitMove &&
-        params[0].type !== "player" &&
-        params[0].type !== "playerAlive";
-      this.actionQueue.process(type, params, immediate);
+      // const immediate =
+      //   type === WorldAction.UnitMove &&
+      //   params[0].type !== "player" &&
+      //   params[0].type !== "playerAlive";
+      this.actionQueue.process(type, params, true);
     };
 
-    this.mapView.grid = world.map;
+    const autoGridRules: IAutoGridRules = this.data.get("data/automap.json");
+    this.autoMap = new AutoGrid(world.map, autoGridRules);
+
+    this.mapView.grid = this.autoMap;
     this.mapView.position.set(
       this.mapView.width / 2,
       this.mapView.height / 2 + UIBarHeight
@@ -116,30 +135,40 @@ export class WorldScene extends Scene {
     this.reset();
   }
 
+  private async suppressInput(duration: number) {
+    this.acceptInput = false;
+    await wait(duration);
+    this.acceptInput = true;
+  }
+
   public update() {
-    if (!this.actionQueue.busy) {
+    if (this.acceptInput) {
       if (
         this.keyboard.getKeyState(37, Infinity) ||
         this.keyboard.getKeyState(65, Infinity)
       ) {
+        this.suppressInput(150);
         this.world.movePlayer(Direction.Left);
       }
       if (
         this.keyboard.getKeyState(38, Infinity) ||
         this.keyboard.getKeyState(87, Infinity)
       ) {
+        this.suppressInput(150);
         this.world.movePlayer(Direction.Up);
       }
       if (
         this.keyboard.getKeyState(39, Infinity) ||
         this.keyboard.getKeyState(68, Infinity)
       ) {
+        this.suppressInput(150);
         this.world.movePlayer(Direction.Right);
       }
       if (
         this.keyboard.getKeyState(40, Infinity) ||
         this.keyboard.getKeyState(83, Infinity)
       ) {
+        this.suppressInput(150);
         this.world.movePlayer(Direction.Down);
       }
     }
@@ -256,9 +285,9 @@ export class WorldScene extends Scene {
     this.healthValue.position.set(0, 0);
     this.addChild(this.healthValue);
 
-    this.foodValue = new IconValue(this.icons, 2, "");
-    this.foodValue.position.set(32, 0);
-    this.addChild(this.foodValue);
+    this.poisonValue = new IconValue(this.icons, 6, "");
+    this.poisonValue.position.set(32, 0);
+    this.addChild(this.poisonValue);
 
     this.goldValue = new IconValue(this.icons, 4, "0");
     this.goldValue.position.set(72, 0);
@@ -552,8 +581,11 @@ export class WorldScene extends Scene {
   private async animateUnitHealthChange(
     id: number,
     amount: number,
-    health: number
+    health: number,
+    source?: string
   ): Promise<void> {
+    console.log("damage from " + source);
+
     // TODO: Polish unit health change
     if (amount !== 0) {
       if (amount < 0) {
@@ -579,9 +611,10 @@ export class WorldScene extends Scene {
         );
 
       if (id === this.world.player.id && amount < 0) {
-        this.showOverlay(100, Palette.Red);
-        this.hideOverlay(100, 100);
-        this.shake(this, 200, 4, 1);
+        const color = source === "poison" ? Palette.Green : Palette.Red;
+        this.showOverlay(75, color);
+        this.hideOverlay(75, 75);
+        this.shake(this.worldView, 150, 4, 1);
       }
     }
 
@@ -650,6 +683,9 @@ export class WorldScene extends Scene {
     this.world.loadMap(floor);
     this.floorValue.set(String(floor));
 
+    this.autoMap.resize(this.world.map.width, this.world.map.height);
+    this.autoMap.update();
+
     // Create unit sprites for new room
     this.world.units.forEach((unit) => this.onUnitAdd(unit));
 
@@ -700,6 +736,9 @@ export class WorldScene extends Scene {
     count: number
   ) {
     switch (type) {
+      case "poison":
+        this.poisonValue.set(String(count));
+        break;
       case "food":
         if (this.world.player.type === "playerAlive") {
           this.foodValue.set(String(count));
@@ -786,7 +825,8 @@ export class WorldScene extends Scene {
       cost.position.set(-cost.width / 2, -16);
       sprite.addChild(cost);
     }
-    sprite.position.set(mapX(unit.position.x), mapY(unit.position.y) - 4);
+    const offset = unit.info.flat ? 0 : 4;
+    sprite.position.set(mapX(unit.position.x), mapY(unit.position.y) - offset);
     sprite.drawOrder = unit.info.drawOrder;
     this.unitSprites.set(unit.id, sprite);
     this.unitLayer.addChild(sprite);

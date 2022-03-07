@@ -1,5 +1,17 @@
 # TODO
 
+## MVP
+
+- Create some levels
+  - Plus sign
+  - Circle
+  - Barbell
+- Dynamically generate mold/monsters (via map hints)
+
+## Nice to Have
+
+- Display sim steps
+
 ## Cleanup
 
 - Minify JavaScript output
