@@ -2,7 +2,7 @@
 
 ## 🐛 Bugs
 
-- Player can move diagonally (super buggy!)
+- Player can move during intro
 - Entities persist between levels/restarts
 
 ## 🍱 Content
@@ -24,6 +24,7 @@
   - Remove poison
   - Gold
   - Key?
+- New intro
 - Meta?
 
 ## 💫 Polish

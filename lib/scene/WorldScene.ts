@@ -149,22 +149,19 @@ export class WorldScene extends Scene {
       ) {
         this.suppressInput(150);
         this.world.movePlayer(Direction.Left);
-      }
-      if (
+      } else if (
         this.keyboard.getKeyState(38, Infinity) ||
         this.keyboard.getKeyState(87, Infinity)
       ) {
         this.suppressInput(150);
         this.world.movePlayer(Direction.Up);
-      }
-      if (
+      } else if (
         this.keyboard.getKeyState(39, Infinity) ||
         this.keyboard.getKeyState(68, Infinity)
       ) {
         this.suppressInput(150);
         this.world.movePlayer(Direction.Right);
-      }
-      if (
+      } else if (
         this.keyboard.getKeyState(40, Infinity) ||
         this.keyboard.getKeyState(83, Infinity)
       ) {
