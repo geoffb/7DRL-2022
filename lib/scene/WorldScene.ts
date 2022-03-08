@@ -812,6 +812,10 @@ export class WorldScene extends Scene {
   }
 
   private onUnitAdd(unit: Unit) {
+    if (this.unitSprites.has(unit.id)) {
+      console.warn(`Unit sprite ${unit.id} exists`);
+      return;
+    }
     const sprite = new Sprite(this.sprites, unit.info.sprite);
     if (unit.forSale) {
       const cost = new IconValue(

@@ -26,9 +26,11 @@
   - Key?
 - New intro
 - Meta?
+- Affixes?
 
 ## 💫 Polish
 
+- Randomize wall tiles with variants (e.g. grate, pipe)
 - Display sim steps
 - New favicon
 

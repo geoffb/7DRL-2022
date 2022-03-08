@@ -2,6 +2,8 @@
 
 A game for [7DRL Challenge 2022](https://itch.io/jam/7drl-challenge-2022).
 
+You are a Master of Sewermancy! Or a magical janitor if you want to be rude about it.
+
 ## Development
 
 ### Repository Structure
