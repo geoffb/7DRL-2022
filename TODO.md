@@ -7,6 +7,7 @@
 
 ## 🍱 Content
 
+- Inner room chunks or more
 - Player
   - New sprite
   - Player abilities? (beyond bump attack/interact)
@@ -19,11 +20,18 @@
   - Purple Slime
   - Mushrooms? (some good, some bad?)
   - Rat?
-- Pickups
-  - Restore health
-  - Remove poison
+- Pickups (Mushrooms)
+  - Restore health (red)
+  - Remove poison (yellow)
   - Gold
   - Key?
+- Doors
+  - Add specific hints for doors
+  - Spawn a couple of doors per level
+  - Door types:
+    - Door (requires key)
+    - Spikes (requires HP)
+    - Mold (adds poison)
 - New intro
 - Meta?
 - Affixes?

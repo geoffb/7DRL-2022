@@ -4,14 +4,7 @@ import {
   RoomRole,
   RoomShapeSymbols,
 } from "@mousepox/dungen";
-import {
-  Grid,
-  Random,
-  distance,
-  // DirectionMask,
-  // BitFlags,
-  IPoint,
-} from "@mousepox/math";
+import { Grid, Random, distance, IPoint } from "@mousepox/math";
 
 export interface LevelEntity {
   type: string;
@@ -25,24 +18,12 @@ interface RoomTemplates {
   templates: Record<string, number[]>;
 }
 
-// interface OpenSpot {
-//   x: number;
-//   y: number;
-//   openNeighbors: number;
-//   originDistance: number;
-//   random: number;
-//   walls: number;
-// }
-
 const RoomRoles = ["generic", "start", "boss", "end"];
-
-// interface GridCellOffset extends IPoint {
-//   mask: DirectionMask;
-// }
 
 const enum TemplateTile {
   Floor = 0,
   Wall = 1,
+  HintDoor = 7,
   HintMonster = 8,
   HintTreasure = 9,
 }
@@ -50,42 +31,6 @@ const enum TemplateTile {
 interface TemplateHint extends IPoint {
   random: number;
 }
-
-/** Cardinal and intercardinal adjacent cell offsets */
-// const AdjacentOffsets: GridCellOffset[] = [
-//   { x: -1, y: -1, mask: DirectionMask.NorthWest },
-//   { x: 0, y: -1, mask: DirectionMask.North },
-//   { x: 1, y: -1, mask: DirectionMask.NorthEast },
-//   { x: -1, y: 0, mask: DirectionMask.West },
-//   { x: 1, y: 0, mask: DirectionMask.East },
-//   { x: -1, y: 1, mask: DirectionMask.SouthWest },
-//   { x: 0, y: 1, mask: DirectionMask.South },
-//   { x: 1, y: 1, mask: DirectionMask.SouthEast },
-// ];
-
-// const EnclosureMasks = [
-//   DirectionMask.West | DirectionMask.North,
-//   DirectionMask.South | DirectionMask.West,
-//   DirectionMask.East | DirectionMask.South,
-//   DirectionMask.North | DirectionMask.East,
-//   DirectionMask.North | DirectionMask.West | DirectionMask.South,
-//   DirectionMask.North | DirectionMask.South | DirectionMask.East,
-//   DirectionMask.West | DirectionMask.South | DirectionMask.East,
-//   DirectionMask.East | DirectionMask.North | DirectionMask.West,
-// ];
-
-// function getAdjacentFlags(grid: Grid, x: number, y: number): number {
-//   let flags = 0;
-//   const v = grid.get(x, y);
-//   for (const offset of AdjacentOffsets) {
-//     const ox = x + offset.x;
-//     const oy = y + offset.y;
-//     if (grid.valid(ox, oy) && grid.get(ox, oy) !== v) {
-//       flags |= offset.mask;
-//     }
-//   }
-//   return flags;
-// }
 
 export class Level {
   public readonly map = new Grid();
@@ -108,6 +53,12 @@ export class Level {
 
   private get roomSize(): number {
     return this.rooms.size;
+  }
+
+  private get roomCount(): number {
+    return Math.floor(
+      (this.map.width / this.roomSize) * (this.map.height / this.roomSize)
+    );
   }
 
   constructor(rooms: RoomTemplates) {
@@ -139,6 +90,7 @@ export class Level {
 
     // Place entities
     this.placeWarps();
+    this.placeDoors();
     this.placeTreasue();
     this.placeMonsters();
   }
@@ -169,34 +121,6 @@ export class Level {
     }
   }
 
-  // private getOpenSpots(ox = 0, oy = 0): OpenSpot[] {
-  //   const spots: OpenSpot[] = [];
-  //   this.spawns.forEach((value, x, y) => {
-  //     if (value !== 0) {
-  //       return;
-  //     }
-  //     let walls = -1;
-  //     let flags = getAdjacentFlags(this.map, x, y);
-  //     for (let i = EnclosureMasks.length - 1; i >= 0; i--) {
-  //       if ((flags & EnclosureMasks[i]) === EnclosureMasks[i]) {
-  //         // console.log("found matching walls " + flags, EnclosureMasks[i]);
-  //         walls = i;
-  //         break;
-  //       }
-  //     }
-  //     const random = this.random.next();
-  //     const originDistance = distance(ox, oy, x, y);
-  //     let openNeighbors = 0;
-  //     this.spawns.forEachAdjacent(x, y, (av) => {
-  //       if (av === 0) {
-  //         openNeighbors++;
-  //       }
-  //     });
-  //     spots.push({ x, y, openNeighbors, originDistance, random, walls });
-  //   });
-  //   return spots;
-  // }
-
   private addHint(type: TemplateTile, x: number, y: number): void {
     let hints = this.hints.get(type);
     if (hints === undefined) {
@@ -226,8 +150,6 @@ export class Level {
       }
       if (this.spawns.get(s.x, s.y) === 0) {
         spot = s;
-      } else {
-        console.debug("not a valid spot", s, this.spawns.get(s.x, s.y));
       }
     }
     return spot;
@@ -260,16 +182,13 @@ export class Level {
   private parseHints(): void {
     const cells = this.map.cells;
     for (let i = 0; i < cells.length; i++) {
-      switch (cells[i]) {
-        case TemplateTile.HintMonster:
-        case TemplateTile.HintTreasure:
-          this.addHint(
-            cells[i],
-            i % this.map.width,
-            Math.floor(i / this.map.width)
-          );
-          cells[i] = TemplateTile.Floor;
-          break;
+      if (cells[i] >= TemplateTile.HintDoor) {
+        this.addHint(
+          cells[i],
+          i % this.map.width,
+          Math.floor(i / this.map.width)
+        );
+        cells[i] = TemplateTile.Floor;
       }
     }
   }
@@ -292,6 +211,31 @@ export class Level {
     }
   }
 
+  private placeDoors(): void {
+    const hints = this.getHints(TemplateTile.HintDoor, (a, b) => {
+      // Sort hints by a combined score of distance from start and end
+      // Add a bit of randomization spice up the results
+      const scoreA =
+        distance(this.start.x, this.start.y, a.x, a.y) * 0.8 +
+        distance(this.end.x, this.end.y, a.x, a.y) * 0.3 +
+        a.random * 25;
+      const scoreB =
+        distance(this.start.x, this.start.y, b.x, b.y) * 0.8 +
+        distance(this.end.x, this.end.y, b.x, b.y) * 0.3 +
+        b.random * 25;
+      return scoreA - scoreB;
+    });
+
+    const count = this.random.integer(0, 2);
+    for (let i = 0; i < count; i++) {
+      const spot = this.popValidSpot(hints);
+      if (spot !== undefined) {
+        const type = this.random.choice(["door", "door", "spikes"]);
+        this.placeEntity(type, spot.x, spot.y);
+      }
+    }
+  }
+
   private placeTreasue(): void {
     const hints = this.getHints(TemplateTile.HintTreasure, (a, b) => {
       // Sort hints by a combined score of distance from start and end
@@ -307,13 +251,17 @@ export class Level {
       return scoreA - scoreB;
     });
 
-    const count = Math.floor(
-      (this.map.width / this.roomSize) * (this.map.height / this.roomSize)
-    );
+    const count = this.roomCount;
     for (let i = 0; i < count; i++) {
       const spot = this.popValidSpot(hints);
       if (spot !== undefined) {
-        const type = this.random.choice(["gold1", "gold2", "crown", "chest"]);
+        const type = this.random.choice([
+          "gold1",
+          "gold2",
+          "crown",
+          "chest",
+          "mushroom_heal",
+        ]);
         this.placeEntity(type, spot.x, spot.y);
       }
     }
@@ -334,9 +282,7 @@ export class Level {
       return scoreA - scoreB;
     });
 
-    const count = Math.floor(
-      (this.map.width / this.roomSize) * (this.map.height / this.roomSize) * 2
-    );
+    const count = this.roomCount * 2;
     for (let i = 0; i < count; i++) {
       const spot = this.popValidSpot(hints);
       if (spot !== undefined) {

@@ -751,27 +751,9 @@ export class World {
         this.removeUnit(target);
         this.onAction(WorldAction.UnitPickup, target.id);
         this.addPlayerInventory(info.data.pickup.type, info.data.pickup.amount);
-        if (target.type === "elixir_life" && unit.type === "player") {
-          // Resurrect player
-          this.removeUnit(this.player);
-          this.onAction(WorldAction.UnitRemove, this.player.id);
-          this.player = this.spawnUnit(
-            "playerAlive",
-            this.player.position.x,
-            this.player.position.y
-          );
-          this.onAction(WorldAction.PlayerHumanityRestore);
-        }
         break;
 
       case UnitRole.RestoreHealth:
-        if (this.player.type === "player") {
-          this.onAction(WorldAction.UnitNegate, target, {
-            x: target.position.x,
-            y: target.position.y - 1,
-          });
-          break;
-        }
         this.removeUnit(target);
         this.onAction(WorldAction.UnitPickup, target.id);
         const amount = info.data?.heal ?? 0;
@@ -1187,22 +1169,22 @@ export class World {
   }
 
   /** Returns whether or not the player can make use of a given item in their current state */
-  private canPlayerUseItem(item: Unit): boolean {
-    const info = item.info;
-
-    // Restrict usable items in skeleton form
-    if (this.player.type === "player") {
-      if (
-        // Cannot use HP restoring items
-        info.role === UnitRole.RestoreHealth ||
-        // Cannot use food restoring items (except elixir_life)
-        (info.role === UnitRole.Pickup &&
-          info.data?.pickup.type === "food" &&
-          item.type !== "elixir_life")
-      ) {
-        return false;
-      }
-    }
+  private canPlayerUseItem(_item: Unit): boolean {
+    //     const info = item.info;
+    //
+    //     // Restrict usable items in skeleton form
+    //     if (this.player.type === "player") {
+    //       if (
+    //         // Cannot use HP restoring items
+    //         info.role === UnitRole.RestoreHealth ||
+    //         // Cannot use food restoring items (except elixir_life)
+    //         (info.role === UnitRole.Pickup &&
+    //           info.data?.pickup.type === "food" &&
+    //           item.type !== "elixir_life")
+    //       ) {
+    //         return false;
+    //       }
+    //     }
 
     // Player can use everything by default
     return true;

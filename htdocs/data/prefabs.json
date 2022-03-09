@@ -63,7 +63,8 @@
     "name": "Door",
     "role": "door",
     "solid": true,
-    "sprite": 9
+    "sprite": 9,
+    "flat": true
   },
 
   "crown": {
@@ -258,11 +259,11 @@
     "sprite": 32
   },
 
-  "elixir_health": {
-    "data": { "cost": 150, "heal": 3 },
+  "mushroom_heal": {
+    "data": { "cost": 150, "heal": 5 },
     "drawOrder": 3,
     "health": 1,
-    "name": "Elixir of Healing",
+    "name": "Healing Mushroom",
     "role": "restore_health",
     "solid": false,
     "sprite": 43
