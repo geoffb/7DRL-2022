@@ -1028,22 +1028,21 @@ export class World {
   }
 
   private behaviorReplicate(unit: Unit) {
-    if (unit.data.age === undefined) {
-      unit.data.age = Math.floor(Math.random() * 10);
-    }
-
+    // Poison player on the same location
     const others = this.getUnitsAt(unit.position.x, unit.position.y);
     for (const other of others) {
+      console.log("mold found other ", other);
       if (other !== undefined && other.info.role === UnitRole.Player) {
         this.addPlayerInventory("poison", 1);
       }
     }
 
-    unit.data.age++;
-    if (unit.data.age < 10) {
+    // Only step mold every 20 game steps
+    if (this.steps % 20 !== 0) {
       return;
     }
 
+    // Count neighboring molds
     let neighbors = 0;
     for (let y = unit.position.y - 1; y <= unit.position.y + 1; y++) {
       for (let x = unit.position.x - 1; x <= unit.position.x + 1; x++) {
@@ -1057,26 +1056,24 @@ export class World {
       }
     }
 
-    if (neighbors < 1 || neighbors > 5) {
-      // Die from solitude or overpopulation
-      if (neighbors >= 8) {
-        for (let y = unit.position.y - 1; y <= unit.position.y + 1; y++) {
-          for (let x = unit.position.x - 1; x <= unit.position.x + 1; x++) {
-            const other = this.getUnitAt(x, y);
-            if (other !== undefined && other.type === unit.type) {
-              this.removeUnit(other);
-              this.onAction(WorldAction.UnitDie, other.id, other.type);
-            }
+    if (neighbors === 8) {
+      // Coalesce into a monster
+      for (let y = unit.position.y - 1; y <= unit.position.y + 1; y++) {
+        for (let x = unit.position.x - 1; x <= unit.position.x + 1; x++) {
+          const other = this.getUnitAt(x, y);
+          if (other !== undefined && other.type === unit.type) {
+            this.removeUnit(other);
+            this.onAction(WorldAction.UnitDie, other.id, other.type);
           }
         }
-        this.spawnUnit("slime", unit.position.x, unit.position.y);
-      } else {
-        this.removeUnit(unit);
-        this.onAction(WorldAction.UnitDie, unit.id, unit.type);
       }
-    } else if (unit.data.age > 5 && (neighbors > 1 || neighbors < 3)) {
+      this.spawnUnit("slime", unit.position.x, unit.position.y);
+    } else if ((neighbors < 1 || neighbors > 4) && Math.random() > 0.5) {
+      // Die from solitude or overpopulation
+      this.removeUnit(unit);
+      this.onAction(WorldAction.UnitDie, unit.id, unit.type);
+    } else if (neighbors > 1 && neighbors < 4 && Math.random() > 0.5) {
       // Replicate
-      unit.data.age = -2;
       const points: IPoint[] = [];
       for (let y = unit.position.y - 1; y <= unit.position.y + 1; y++) {
         for (let x = unit.position.x - 1; x <= unit.position.x + 1; x++) {
@@ -1087,8 +1084,7 @@ export class World {
       }
       if (points.length > 0) {
         const point = this.rng.choice(points);
-        const spawn = this.spawnUnit(unit.type, point.x, point.y);
-        spawn.data.age = 0;
+        this.spawnUnit(unit.type, point.x, point.y);
       }
     }
   }
@@ -1170,22 +1166,6 @@ export class World {
 
   /** Returns whether or not the player can make use of a given item in their current state */
   private canPlayerUseItem(_item: Unit): boolean {
-    //     const info = item.info;
-    //
-    //     // Restrict usable items in skeleton form
-    //     if (this.player.type === "player") {
-    //       if (
-    //         // Cannot use HP restoring items
-    //         info.role === UnitRole.RestoreHealth ||
-    //         // Cannot use food restoring items (except elixir_life)
-    //         (info.role === UnitRole.Pickup &&
-    //           info.data?.pickup.type === "food" &&
-    //           item.type !== "elixir_life")
-    //       ) {
-    //         return false;
-    //       }
-    //     }
-
     // Player can use everything by default
     return true;
   }

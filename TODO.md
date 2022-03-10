@@ -13,25 +13,19 @@
   - Player abilities? (beyond bump attack/interact)
 - Hazards
   - Mold
-    - Improve replicate behavior
+    - Grow more slowly and/or die more often
+    - Different kinds of mold
+      - Only
   - Gas
   - Fire
   - Green Slime
   - Purple Slime
-  - Mushrooms? (some good, some bad?)
-  - Rat?
-- Pickups (Mushrooms)
-  - Restore health (red)
-  - Remove poison (yellow)
+- Pickups
+  - Restore health
+  - Remove poison
   - Gold
-  - Key?
 - Doors
-  - Add specific hints for doors
-  - Spawn a couple of doors per level
-  - Door types:
-    - Door (requires key)
-    - Spikes (requires HP)
-    - Mold (adds poison)
+  - Add "mold" door (adds poison when crossing)
 - New intro
 - Meta?
 - Affixes?

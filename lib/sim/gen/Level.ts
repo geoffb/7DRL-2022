@@ -93,6 +93,7 @@ export class Level {
     this.placeDoors();
     this.placeTreasue();
     this.placeMonsters();
+    this.placeMold();
   }
 
   private placeEntity(
@@ -290,5 +291,13 @@ export class Level {
         this.placeEntity(type, spot.x, spot.y);
       }
     }
+  }
+
+  private placeMold(): void {
+    this.spawns.forEach((value, x, y) => {
+      if (value === 0 && this.random.chance(0.2)) {
+        this.placeEntity("mold", x, y);
+      }
+    });
   }
 }
