@@ -21,7 +21,7 @@ async function main() {
     world.restart();
     worldScene.reset();
     game.activateScene("world");
-    worldScene.intro();
+    // worldScene.intro();
   }
 
   // Init game

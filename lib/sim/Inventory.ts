@@ -29,7 +29,7 @@ export class Inventory {
   public remove(type: string, count: number, force = false): boolean {
     const exists = this.items.get(type);
     if (force || (exists !== undefined && exists >= count)) {
-      this.items.set(type, (exists ?? 0) - count);
+      this.items.set(type, Math.max((exists ?? 0) - count, 0));
       return true;
     } else {
       // Not enough of specified item

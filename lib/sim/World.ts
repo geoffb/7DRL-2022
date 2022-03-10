@@ -8,15 +8,7 @@ import {
 } from "@mousepox/math";
 import { Bag } from "./Bag";
 import { Inventory } from "./Inventory";
-import {
-  getLayerByName,
-  getLayersByType,
-  getWalkableTiles,
-  ITiledMap,
-  ITiledObjectGroup,
-  ITiledTileLayer,
-  parseProperties,
-} from "./tiled";
+import { getWalkableTiles } from "./tiled";
 import {
   IUnitInfo,
   IUnitSerialization,
@@ -48,17 +40,10 @@ export const enum WorldAction {
   PlayerHumanityRestore,
 }
 
-interface IMapContext {
-  enter: IPoint;
-  exit: IPoint;
-}
-
 interface IMapSerialization {
   width: number;
   height: number;
-  // rooms: IRoomSerialization[];
   units: IUnitSerialization[];
-  context: IMapContext;
   tiles: number[];
 }
 
@@ -137,7 +122,7 @@ export class World {
 
   public affix: string | undefined;
 
-  private readonly data: DataCache;
+  // private readonly data: DataCache;
 
   private readonly config: IWorldConfig;
 
@@ -148,12 +133,6 @@ export class World {
   private readonly rng = new Random();
 
   public readonly map = new Grid(0, 0);
-
-  /** Map context (entry/exit points, etc) */
-  private mapContext: IMapContext = {
-    enter: { x: 0, y: 0 },
-    exit: { x: 0, y: 0 },
-  };
 
   private readonly level: Level;
 
@@ -181,7 +160,7 @@ export class World {
   }
 
   constructor(data: DataCache) {
-    this.data = data;
+    // this.data = data;
     this.config = data.get("data/config.json");
     this.prefabs = data.get("data/prefabs.json");
 
@@ -217,6 +196,7 @@ export class World {
     this.player.health = this.player.info.health;
 
     this.inventory.empty();
+    this.inventory.add("key", 3);
 
     this.units.clear();
     this.mapCache.clear();
@@ -244,7 +224,6 @@ export class World {
     const map = this.unpackMap(floor);
     if (map !== undefined) {
       // Load map from cached data
-      this.mapContext = map.context;
       this.map.resize(map.width, map.height);
       this.map.cells = map.tiles;
     } else {
@@ -252,23 +231,9 @@ export class World {
       this.generateMap(floor);
     }
 
-    let spawnX = 0;
-    let spawnY = 0;
-
-    // Determine player spawn location
-    if (floor < this.floorIndex) {
-      // Going up
-      spawnX = this.mapContext.exit.x;
-      spawnY = this.mapContext.exit.y;
-    } else {
-      // Going down
-      spawnX = this.mapContext.enter.x;
-      spawnY = this.mapContext.enter.y;
-    }
-
     // Place player within room
     this.addUnit(this.player);
-    this.player.position.set(spawnX, spawnY);
+    this.player.position.set(this.level.start.x, this.level.start.y);
 
     // Update floor index
     this.floorIndex = floor;
@@ -346,8 +311,8 @@ export class World {
     });
 
     // Poison mechanic
-    if (this.steps % 10 === 0) {
-      const poisonDamage = Math.floor(this.inventory.get("poison") / 10);
+    if (this.steps % 20 === 0) {
+      const poisonDamage = Math.floor(this.inventory.get("poison") / 25);
       if (poisonDamage > 0) {
         this.damageUnit(this.player, poisonDamage, "poison");
       }
@@ -421,127 +386,95 @@ export class World {
     }
   }
 
-  private generateMap(floor: number) {
+  private generateMap(_floor: number) {
     this.level.generate(2, 3);
 
     this.map.resize(this.level.map.width, this.level.map.height);
     this.map.copy(this.level.map);
 
     for (const entity of this.level.entities) {
-      // Update map context
-      switch (entity.type) {
-        case "stairsDown":
-          this.mapContext.exit.x = entity.x;
-          this.mapContext.exit.y = entity.y;
-          break;
-        case "stairsUp":
-          this.mapContext.enter.x = entity.x;
-          this.mapContext.enter.y = entity.y;
-          break;
-      }
       this.spawnUnit(entity.type, entity.x, entity.y);
     }
 
-    return;
-
-    this.affix = undefined;
-    if (floor === 0) {
-      // DEBUG: Uncomment to force a specific map/variant
-      // this.loadMapFromData("crypt4", "unit_a");
-      this.loadMapFromData(this.config.start);
-    } else if (floor % 4 === 0) {
-      this.loadMapFromData(this.getFromBag("maps_rest"));
-    } else {
-      if (floor % 5 === 0) {
-        this.affix = this.getFromBag("affixes");
-      }
-      this.loadMapFromData(this.getFromBag("maps_floors"));
-    }
+    // this.affix = undefined;
+    // if (floor === 0) {
+    //   // DEBUG: Uncomment to force a specific map/variant
+    //   // this.loadMapFromData("crypt4", "unit_a");
+    //   this.loadMapFromData(this.config.start);
+    // } else if (floor % 4 === 0) {
+    //   this.loadMapFromData(this.getFromBag("maps_rest"));
+    // } else {
+    //   if (floor % 5 === 0) {
+    //     this.affix = this.getFromBag("affixes");
+    //   }
+    //   this.loadMapFromData(this.getFromBag("maps_floors"));
+    // }
   }
 
   /** Load map from data cache */
-  private loadMapFromData(name: string, layout?: string) {
-    // Get map data
-    const data = this.data.get(`data/maps/${name}.json`) as ITiledMap;
-
-    // Load map properties
-    if (data.properties !== undefined) {
-      const props = parseProperties(data.properties);
-      this.mapContext.enter.x = props.PlayerStartX ?? 0;
-      this.mapContext.enter.y = props.PlayerStartY ?? 0;
-    }
-
-    // Initialize map
-    // Get the first tile layer found
-    const tiles = getLayersByType<ITiledTileLayer>(data, "tilelayer")[0];
-    this.map.resize(data.width, data.height);
-    for (let i = 0; i < tiles.data.length; i++) {
-      this.map.cells[i] = tiles.data[i] - 1;
-    }
-
-    let group: ITiledObjectGroup | undefined;
-    if (layout !== undefined) {
-      // Specific object group
-      group = getLayerByName<ITiledObjectGroup>(data, layout);
-    } else {
-      // Chose one of the available object groups
-      const objectGroups = getLayersByType<ITiledObjectGroup>(
-        data,
-        "objectgroup"
-      );
-      group = layout ?? this.rng.choice(objectGroups);
-    }
-
-    if (group !== undefined) {
-      // Create units from object group
-      for (const unitData of group.objects) {
-        // Determine map grid location
-        const mapX = Math.floor(unitData.x / 16);
-        const mapY = Math.floor(unitData.y / 16 - 1);
-
-        // Ensure object has a valid type
-        if (unitData.type.length === 0) {
-          console.warn(`Skipping undefined unit type at: ${mapX}, ${mapY}`);
-          continue;
-        }
-
-        // Create unit structure
-        const unit: IUnitSerialization = {
-          data: {},
-          sale: false,
-          ttl: -1,
-          type: unitData.type,
-          x: mapX,
-          y: mapY,
-        };
-
-        // Transfer custom object properties to free-form unit data
-        if (unitData.properties) {
-          for (const prop of unitData.properties) {
-            unit.data[prop.name] = prop.value;
-          }
-        }
-
-        // Update map context
-        switch (unit.type) {
-          case "stairsDown":
-            this.mapContext.exit.x = mapX;
-            this.mapContext.exit.y = mapY;
-            break;
-          case "stairsUp":
-            this.mapContext.enter.x = mapX;
-            this.mapContext.enter.y = mapY;
-            break;
-        }
-
-        // Add unit
-        const u = Unit.deserialize(unit, this.getUnitInfo(unit.type));
-        this.addUnit(u);
-      }
-    } else {
-      console.error("Invalid object group");
-    }
-  }
+  //   private loadMapFromData(name: string, layout?: string) {
+  //     // Get map data
+  //     const data = this.data.get(`data/maps/${name}.json`) as ITiledMap;
+  //
+  //     // Initialize map
+  //     // Get the first tile layer found
+  //     const tiles = getLayersByType<ITiledTileLayer>(data, "tilelayer")[0];
+  //     this.map.resize(data.width, data.height);
+  //     for (let i = 0; i < tiles.data.length; i++) {
+  //       this.map.cells[i] = tiles.data[i] - 1;
+  //     }
+  //
+  //     let group: ITiledObjectGroup | undefined;
+  //     if (layout !== undefined) {
+  //       // Specific object group
+  //       group = getLayerByName<ITiledObjectGroup>(data, layout);
+  //     } else {
+  //       // Chose one of the available object groups
+  //       const objectGroups = getLayersByType<ITiledObjectGroup>(
+  //         data,
+  //         "objectgroup"
+  //       );
+  //       group = layout ?? this.rng.choice(objectGroups);
+  //     }
+  //
+  //     if (group !== undefined) {
+  //       // Create units from object group
+  //       for (const unitData of group.objects) {
+  //         // Determine map grid location
+  //         const mapX = Math.floor(unitData.x / 16);
+  //         const mapY = Math.floor(unitData.y / 16 - 1);
+  //
+  //         // Ensure object has a valid type
+  //         if (unitData.type.length === 0) {
+  //           console.warn(`Skipping undefined unit type at: ${mapX}, ${mapY}`);
+  //           continue;
+  //         }
+  //
+  //         // Create unit structure
+  //         const unit: IUnitSerialization = {
+  //           data: {},
+  //           sale: false,
+  //           ttl: -1,
+  //           type: unitData.type,
+  //           x: mapX,
+  //           y: mapY,
+  //         };
+  //
+  //         // Transfer custom object properties to free-form unit data
+  //         if (unitData.properties) {
+  //           for (const prop of unitData.properties) {
+  //             unit.data[prop.name] = prop.value;
+  //           }
+  //         }
+  //
+  //         // Add unit
+  //         const u = Unit.deserialize(unit, this.getUnitInfo(unit.type));
+  //         this.addUnit(u);
+  //       }
+  //     } else {
+  //       console.error("Invalid object group");
+  //     }
+  //   }
 
   /** Unload the currently loaded map and store it in the map cache */
   private unloadMap() {
@@ -549,6 +482,9 @@ export class World {
     if (this.floorIndex < 0) {
       return;
     }
+
+    // Reset steps
+    this.steps = 0;
 
     // Pack units
     const units: IUnitSerialization[] = [];
@@ -564,7 +500,6 @@ export class World {
 
     // Pack map into map cache
     this.packMap(this.floorIndex, {
-      context: this.mapContext,
       height: this.map.height,
       // rooms,
       units,
@@ -648,8 +583,7 @@ export class World {
 
       // Spawn loot on death
       if (unit.info.data?.loot !== undefined) {
-        const suffix = this.player.type === "player" ? "_dead" : "_alive";
-        const drop: string = this.getFromBag(unit.info.data.loot + suffix);
+        const drop: string = this.getFromBag(unit.info.data.loot);
         if (drop !== "") {
           this.spawnUnit(drop, unit.position.x, unit.position.y);
         }
@@ -767,6 +701,16 @@ export class World {
           );
         }
         break;
+
+      case UnitRole.CurePoison: {
+        this.removeUnit(target);
+        this.onAction(WorldAction.UnitPickup, target.id);
+        const amount = info.data?.cure ?? 0;
+        if (amount > 0) {
+          this.removePlayerInventory("poison", amount, true);
+        }
+        break;
+      }
 
       case UnitRole.Door:
         if (this.removePlayerInventory(info.data, 1)) {
@@ -1031,7 +975,6 @@ export class World {
     // Poison player on the same location
     const others = this.getUnitsAt(unit.position.x, unit.position.y);
     for (const other of others) {
-      console.log("mold found other ", other);
       if (other !== undefined && other.info.role === UnitRole.Player) {
         this.addPlayerInventory("poison", 1);
       }

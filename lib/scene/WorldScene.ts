@@ -62,6 +62,8 @@ export class WorldScene extends Scene {
 
   private floorValue: IconValue;
 
+  private stepsValue: IconValue;
+
   private message: SpriteText;
 
   private messageBG: Box;
@@ -89,10 +91,10 @@ export class WorldScene extends Scene {
     this.overlay.visible = false;
 
     this.healthValue.set(String(world.player.health));
-    // this.foodValue.set("-");
     this.poisonValue.set("0");
-    this.keysValue.set("0");
+    this.keysValue.set(String(this.world.inventory.get("key")));
     this.floorValue.set("0");
+    this.stepsValue.set("0");
     this.goldValue.set("0");
 
     this.autoMap.resize(world.map.width, world.map.height);
@@ -286,17 +288,21 @@ export class WorldScene extends Scene {
     this.poisonValue.position.set(32, 0);
     this.addChild(this.poisonValue);
 
-    this.goldValue = new IconValue(this.icons, 4, "0");
-    this.goldValue.position.set(72, 0);
-    this.addChild(this.goldValue);
-
     this.keysValue = new IconValue(this.icons, 3, "0");
-    this.keysValue.position.set(112, 0);
+    this.keysValue.position.set(64, 0);
     this.addChild(this.keysValue);
 
+    this.goldValue = new IconValue(this.icons, 4, "0");
+    this.goldValue.position.set(96, 0);
+    this.addChild(this.goldValue);
+
     this.floorValue = new IconValue(this.icons, 5, "0");
-    this.floorValue.position.set(152, 0);
+    this.floorValue.position.set(176, 0);
     this.addChild(this.floorValue);
+
+    this.stepsValue = new IconValue(this.icons, 8, "0");
+    this.stepsValue.position.set(208, 0);
+    this.addChild(this.stepsValue);
 
     this.messageBG = new Box(this.width, UIBarHeight, "#D27D2C");
     this.messageBG.visible = false;
@@ -679,6 +685,7 @@ export class WorldScene extends Scene {
     const floor = this.world.floor + (dir === "down" ? 1 : -1);
     this.world.loadMap(floor);
     this.floorValue.set(String(floor));
+    this.stepsValue.set(String(this.world.steps));
 
     this.autoMap.resize(this.world.map.width, this.world.map.height);
     this.autoMap.update();
@@ -725,6 +732,7 @@ export class WorldScene extends Scene {
   private async animateStepAwait(): Promise<void> {
     // Trigger a world step
     this.world.step();
+    this.stepsValue.set(String(this.world.steps));
   }
 
   private async animatePlayerInventoryChange(

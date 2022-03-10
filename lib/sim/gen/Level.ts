@@ -45,9 +45,9 @@ export class Level {
 
   private readonly spawns = new Grid();
 
-  private readonly start: IPoint = { x: 0, y: 0 };
+  public readonly start: IPoint = { x: 0, y: 0 };
 
-  private readonly end: IPoint = { x: 0, y: 0 };
+  public readonly end: IPoint = { x: 0, y: 0 };
 
   private blueprint: Floor;
 
@@ -108,18 +108,22 @@ export class Level {
       this.spawns.set(x, y, 1);
     } else {
       // Restrict spawning in a buffer radius around this location
-      this.spawns.forEachInArea(
-        x - buffer,
-        y - buffer,
-        1 + buffer * 2,
-        1 + buffer * 2,
-        (_, tx, ty) => {
-          if (distance(x, y, tx, ty) <= buffer) {
-            this.spawns.set(tx, ty, 1);
-          }
-        }
-      );
+      this.removeSpawns(x, y, buffer);
     }
+  }
+
+  private removeSpawns(x: number, y: number, buffer: number): void {
+    this.spawns.forEachInArea(
+      x - buffer,
+      y - buffer,
+      1 + buffer * 2,
+      1 + buffer * 2,
+      (_, tx, ty) => {
+        if (distance(x, y, tx, ty) <= buffer) {
+          this.spawns.set(tx, ty, 1);
+        }
+      }
+    );
   }
 
   private addHint(type: TemplateTile, x: number, y: number): void {
@@ -200,7 +204,7 @@ export class Level {
     if (start !== undefined) {
       this.start.x = Math.floor(start.x * this.roomSize + this.roomSize / 2);
       this.start.y = Math.floor(start.y * this.roomSize + this.roomSize / 2);
-      this.placeEntity("stairsUp", this.start.x, this.start.y, 3);
+      this.removeSpawns(this.start.x, this.start.y, 5);
     }
 
     // Place exit
@@ -256,13 +260,7 @@ export class Level {
     for (let i = 0; i < count; i++) {
       const spot = this.popValidSpot(hints);
       if (spot !== undefined) {
-        const type = this.random.choice([
-          "gold1",
-          "gold2",
-          "crown",
-          "chest",
-          "mushroom_heal",
-        ]);
+        const type = this.random.choice(["coin", "chest"]);
         this.placeEntity(type, spot.x, spot.y);
       }
     }

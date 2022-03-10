@@ -21,6 +21,7 @@ export const enum UnitRole {
   Pickup = "pickup",
   Door = "door",
   RestoreHealth = "restore_health",
+  CurePoison = "cure_poison",
   Warp = "warp",
   Doodad = "doodad",
 }

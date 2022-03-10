@@ -67,16 +67,16 @@
     "flat": true
   },
 
-  "crown": {
+  "coin": {
     "data": {
       "pickup": {
-        "amount": 250,
+        "amount": 1,
         "type": "gold"
       }
     },
     "drawOrder": 2,
     "health": 1,
-    "name": "Crown",
+    "name": "Gold Coin",
     "role": "pickup",
     "solid": false,
     "sprite": 10
@@ -176,12 +176,15 @@
     "sprite": 11
   },
 
-  "powerGloves": {
-    "data": "powerGloves",
+  "antidote": {
+    "data": {
+      "cost": 10,
+      "cure": 25
+    },
     "drawOrder": 2,
     "health": 1,
-    "name": "Power Gloves",
-    "role": "pickup",
+    "name": "Antidote",
+    "role": "cure_poison",
     "solid": false,
     "sprite": 12
   },
@@ -358,83 +361,5 @@
     "role": "monster",
     "solid": true,
     "sprite": 48
-  },
-
-  "bread": {
-    "data": {
-      "cost": 150,
-      "pickup": {
-        "amount": 75,
-        "type": "food"
-      }
-    },
-    "drawOrder": 2,
-    "health": 1,
-    "name": "Bread",
-    "role": "pickup",
-    "solid": false,
-    "sprite": 40
-  },
-
-  "cheese": {
-    "data": {
-      "cost": 300,
-      "pickup": {
-        "amount": 150,
-        "type": "food"
-      }
-    },
-    "drawOrder": 2,
-    "health": 1,
-    "name": "Cheese",
-    "role": "pickup",
-    "solid": false,
-    "sprite": 41
-  },
-
-  "carrot": {
-    "data": {
-      "cost": 50,
-      "pickup": {
-        "amount": 25,
-        "type": "food"
-      }
-    },
-    "drawOrder": 2,
-    "health": 1,
-    "name": "Carrot",
-    "role": "pickup",
-    "solid": false,
-    "sprite": 42
-  },
-
-  "gold1": {
-    "data": {
-      "pickup": {
-        "amount": 25,
-        "type": "gold"
-      }
-    },
-    "drawOrder": 2,
-    "health": 1,
-    "name": "Gold",
-    "role": "pickup",
-    "solid": false,
-    "sprite": 36
-  },
-
-  "gold2": {
-    "data": {
-      "pickup": {
-        "amount": 100,
-        "type": "gold"
-      }
-    },
-    "drawOrder": 2,
-    "health": 1,
-    "name": "Bag of Gold",
-    "role": "pickup",
-    "solid": false,
-    "sprite": 37
   }
 }
