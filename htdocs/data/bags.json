@@ -11,22 +11,60 @@
   "rooms_end_T": ["T_cozy"],
   "rooms_end_X": ["X_cozy"],
 
-  "rooms_generic_U": ["U_big", "U_circle", "U_diamond", "U_cubby"],
-  "rooms_generic_I": ["I_big", "I_hallway", "I_cozy", "I_enclave", "I_zig"],
+  "rooms_generic_U": ["U_big", "U_circle", "U_diamond"],
+  "rooms_generic_I": ["I_big", "I_hallway", "I_cozy", "I_zig"],
   "rooms_generic_L": ["L_big", "L_hallway", "L_cozy", "L_maze"],
   "rooms_generic_T": ["T_big", "T_hallway", "T_cozy"],
   "rooms_generic_X": ["X_big", "X_hallway", "X_cozy"],
 
-  "doors": ["door", "door", "door", "spikes", "spore"],
-  "treasure": ["coin", "coin", "coin", "heart", "crate", "crate", "chest"],
+  "doors": ["door", "door", "door", "spikes", "mote_poison"],
+
+  "treasure": [
+    "coin",
+    "coin",
+    "heart",
+    "mote_magic",
+    "mote_cure",
+    "crate",
+    "crate",
+    "chest"
+  ],
+
   "monsters": ["slime"],
 
-  "loot_chest": ["key", "antidote", "potion_health"],
-  "loot_crate": ["key", "heart", "heart", "coin", "coin"],
-  "loot_monster": ["", "", "", "", "", "spore", "spore", "heart", "coin"],
+  "loot_chest": ["key", "elixir_health", "elixir_magic", "elixir_cure"],
 
-  "shop": ["key", "heart", "antidote", "potion_health"],
+  "loot_crate": [
+    "key",
+    "heart",
+    "heart",
+    "coin",
+    "coin",
+    "mote_magic",
+    "mote_cure"
+  ],
 
-  "loot_pot": ["coin"],
-  "loot_doodad": ["", "", "", "", "coin"]
+  "loot_monster": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "heart",
+    "mote_magic",
+    "mote_cure",
+    "coin"
+  ],
+
+  "shop": [
+    "key",
+    "heart",
+    "mote_magic",
+    "mote_cure",
+    "elixir_health",
+    "elixir_magic",
+    "elixir_cure"
+  ]
 }

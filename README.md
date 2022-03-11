@@ -4,6 +4,15 @@ A game for [7DRL Challenge 2022](https://itch.io/jam/7drl-challenge-2022).
 
 You are a Master of Sewermancy! Or a magical janitor if you want to be rude about it.
 
+## Design
+
+### Resource Exchange
+
+- 1 Health = 1 Gold
+- 5 Cure = 1 Gold
+- 1 Magic = 3 Gold
+- 1 Key = 5 Gold
+
 ## Development
 
 ### Repository Structure

@@ -33,7 +33,7 @@
 
   "key": {
     "data": {
-      "cost": 3,
+      "cost": 5,
       "pickup": {
         "amount": 1,
         "type": "key"
@@ -47,19 +47,48 @@
     "sprite": 8
   },
 
-  "spore": {
+  "mote_cure": {
     "data": {
+      "cost": 1,
+      "cure": 5
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Mote of Cure",
+    "role": "cure_poison",
+    "solid": false,
+    "sprite": 18
+  },
+
+  "mote_magic": {
+    "data": {
+      "cost": 3,
       "pickup": {
         "amount": 1,
+        "type": "magic"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Mote of Magic",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 19
+  },
+
+  "mote_poison": {
+    "data": {
+      "pickup": {
+        "amount": 3,
         "type": "poison"
       }
     },
     "drawOrder": 2,
     "health": 1,
-    "name": "Spore",
+    "name": "Mote of Poison",
     "role": "pickup",
     "solid": false,
-    "sprite": 18
+    "sprite": 20
   },
 
   "door": {
@@ -182,27 +211,43 @@
     "sprite": 11
   },
 
-  "potion_health": {
+  "elixir_health": {
     "data": {
       "cost": 5,
       "heal": 5
     },
     "drawOrder": 2,
     "health": 1,
-    "name": "Health Potion",
+    "name": "Elixir of Health",
     "role": "restore_health",
     "solid": false,
     "sprite": 13
   },
 
-  "antidote": {
+  "elixir_magic": {
     "data": {
-      "cost": 5,
-      "cure": 5
+      "cost": 9,
+      "pickup": {
+        "amount": 3,
+        "type": "magic"
+      }
     },
     "drawOrder": 2,
     "health": 1,
-    "name": "Antidote",
+    "name": "Elixir of Magic",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 14
+  },
+
+  "elixir_cure": {
+    "data": {
+      "cost": 5,
+      "cure": 25
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Elixir of Cure",
     "role": "cure_poison",
     "solid": false,
     "sprite": 12

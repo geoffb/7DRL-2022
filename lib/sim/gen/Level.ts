@@ -31,11 +31,17 @@ interface Levels {
   };
 }
 
+interface Chunks {
+  size: number;
+  templates: number[][];
+}
+
 const RoomRoles = ["generic", "start", "boss", "end"];
 
 const enum TemplateTile {
   Floor = 0,
   Wall = 1,
+  Chunk = 5,
   HintDoor = 7,
   HintMonster = 8,
   HintTreasure = 9,
@@ -57,6 +63,8 @@ export class Level {
   private readonly rooms: RoomTemplates;
 
   private readonly levels: Levels;
+
+  private readonly chunks: Chunks;
 
   private readonly hints: Map<TemplateTile, TemplateHint[]> = new Map();
 
@@ -84,6 +92,7 @@ export class Level {
     this.bags = bags;
     this.levels = data.get("data/levels.json");
     this.rooms = data.get("data/rooms.json");
+    this.chunks = data.get("data/chunks.json");
   }
 
   /** Clear level state */
@@ -92,6 +101,7 @@ export class Level {
     this.map.resize(0, 0);
     this.map.fill(0);
     this.entities.length = 0;
+    this.hints.clear();
   }
 
   /** Load a level from data */
@@ -239,16 +249,30 @@ export class Level {
       const name = this.bags.get(`rooms_${role}_${shape}`);
       const template = this.rooms.templates[name];
 
-      const grid = new Grid(this.roomSize, this.roomSize);
-      grid.cells = template.slice();
+      const roomGrid = new Grid(this.roomSize, this.roomSize);
+      roomGrid.cells = template.slice();
+
+      // Replace chunk markers
+      roomGrid.forEach((value, x, y) => {
+        if (value === TemplateTile.Chunk) {
+          const chunk = this.random.choice(this.chunks.templates);
+          const chunkGrid = new Grid(this.chunks.size, this.chunks.size);
+          chunkGrid.cells = chunk.slice();
+          const rot = this.random.integer(0, 3);
+          if (rot > 0) {
+            chunkGrid.rotate(rot);
+          }
+          roomGrid.paste(chunkGrid, x, y);
+        }
+      });
 
       // Apply room rotation
       if (room.rotation > 0) {
-        grid.rotate(room.rotation);
+        roomGrid.rotate(room.rotation);
       }
 
       // Paste final room grid into level map
-      this.map.paste(grid, room.x * this.roomSize, room.y * this.roomSize);
+      this.map.paste(roomGrid, room.x * this.roomSize, room.y * this.roomSize);
     }
   }
 

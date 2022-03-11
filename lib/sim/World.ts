@@ -8,7 +8,6 @@ import {
 } from "@mousepox/math";
 import { BagSet } from "./BagSet";
 import { Inventory } from "./Inventory";
-import { getWalkableTiles } from "./tiled";
 import { IUnitInfo, Unit, UnitBehavior, UnitRole } from "./Unit";
 import { Level } from "./gen/Level";
 
@@ -91,6 +90,11 @@ function getUnitDistance(unit: Unit, target: Unit): number {
   );
 }
 
+interface WorldConfig {
+  walkable: number[];
+  inventory: Record<string, number>;
+}
+
 export class World {
   public readonly units: Map<number, Unit> = new Map();
 
@@ -101,6 +105,8 @@ export class World {
   public steps = 0;
 
   public affix: string | undefined;
+
+  private readonly config: WorldConfig;
 
   private readonly prefabs: Record<string, IUnitInfo>;
 
@@ -114,8 +120,6 @@ export class World {
 
   /** Cache of JSON encoded map data */
   private readonly mapCache: Map<number, string> = new Map();
-
-  private readonly walkableTiles: number[] = [];
 
   private timeElapsed = 0;
   private timeLast = Date.now();
@@ -140,6 +144,7 @@ export class World {
   }
 
   constructor(data: DataCache) {
+    this.config = data.get("data/world.json");
     this.prefabs = data.get("data/prefabs.json");
 
     // Init bags
@@ -149,10 +154,6 @@ export class World {
     this.level = new Level(data, this.bags);
 
     this.player = this.createUnit("player");
-
-    // Parse tileset data
-    const tileset = data.get("data/tilesets/sewer.json");
-    this.walkableTiles = getWalkableTiles(tileset);
   }
 
   public getTimeElapsed = () => this.timeElapsed;
@@ -173,8 +174,9 @@ export class World {
     this.player.health = this.player.info.health;
 
     this.inventory.empty();
-    this.inventory.add("key", 3);
-    // this.inventory.add("gold", 99);
+    for (const type in this.config.inventory) {
+      this.inventory.add(type, this.config.inventory[type]);
+    }
 
     this.units.clear();
     this.mapCache.clear();
@@ -343,7 +345,8 @@ export class World {
   private generateMap(floor: number) {
     // Generate level
     if (floor === 0) {
-      this.level.load("library");
+      this.level.load("shop");
+      // this.level.load("library");
     } else if (floor % 3 === 0) {
       this.level.load("shop");
     } else {
@@ -601,7 +604,7 @@ export class World {
   private isBlockedXY(x: number, y: number, forceEmpty = false): boolean {
     // Check for non-walkable tiles
     const tile = this.map.get(x, y);
-    if (this.walkableTiles.indexOf(tile) === -1) {
+    if (this.config.walkable.indexOf(tile) === -1) {
       return true;
     }
 
@@ -639,7 +642,7 @@ export class World {
     if (tile === -1 && unit !== this.player) {
       return true;
     }
-    if (tile !== -1 && this.walkableTiles.indexOf(tile) === -1) {
+    if (tile !== -1 && this.config.walkable.indexOf(tile) === -1) {
       return true;
     }
 

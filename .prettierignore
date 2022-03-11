@@ -10,5 +10,6 @@ dist/
 htdocs/data/tilesets/*.json
 
 # Files which need custom formatting
+htdocs/data/chunks.json
 htdocs/data/rooms.json
 htdocs/data/levels.json

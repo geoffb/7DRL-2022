@@ -1,0 +1,8 @@
+{
+  "walkable": [0],
+  "inventory": {
+    "magic": 5,
+    "key": 3,
+    "gold": 0
+  }
+}

@@ -10,10 +10,11 @@
     "data": [
       "data/automap.json",
       "data/bags.json",
+      "data/chunks.json",
       "data/levels.json",
-      "data/rooms.json",
       "data/prefabs.json",
-      "data/tilesets/sewer.json"
+      "data/rooms.json",
+      "data/world.json"
     ],
     "images": [
       "images/sprites.png",

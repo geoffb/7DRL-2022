@@ -54,7 +54,7 @@ export class WorldScene extends Scene {
 
   private poisonValue: IconValue;
 
-  private foodValue: IconValue;
+  private magicValue: IconValue;
 
   private keysValue: IconValue;
 
@@ -93,6 +93,7 @@ export class WorldScene extends Scene {
     this.healthValue.set(String(world.player.health));
     this.poisonValue.set("0");
     this.keysValue.set(String(this.world.inventory.get("key")));
+    this.magicValue.set(String(this.world.inventory.get("magic")));
     this.floorValue.set("0");
     this.floorValue.visible = world.floor > 0;
     this.stepsValue.set("0");
@@ -294,16 +295,20 @@ export class WorldScene extends Scene {
     this.healthValue.position.set(0, 0);
     this.addChild(this.healthValue);
 
-    this.poisonValue = new IconValue(this.icons, 6, "");
+    this.poisonValue = new IconValue(this.icons, 6, "0");
     this.poisonValue.position.set(32, 0);
     this.addChild(this.poisonValue);
 
+    this.magicValue = new IconValue(this.icons, 7, "0");
+    this.magicValue.position.set(64, 0);
+    this.addChild(this.magicValue);
+
     this.keysValue = new IconValue(this.icons, 3, "0");
-    this.keysValue.position.set(64, 0);
+    this.keysValue.position.set(96, 0);
     this.addChild(this.keysValue);
 
     this.goldValue = new IconValue(this.icons, 4, "0");
-    this.goldValue.position.set(96, 0);
+    this.goldValue.position.set(128, 0);
     this.addChild(this.goldValue);
 
     this.floorValue = new IconValue(this.icons, 5, "0");
@@ -314,7 +319,7 @@ export class WorldScene extends Scene {
     this.stepsValue.position.set(208, 0);
     this.addChild(this.stepsValue);
 
-    this.messageBG = new Box(this.width, UIBarHeight, "#D27D2C");
+    this.messageBG = new Box(this.width, UIBarHeight, Palette.Red);
     this.messageBG.visible = false;
     this.addChild(this.messageBG);
 
@@ -637,20 +642,10 @@ export class WorldScene extends Scene {
     }
   }
 
-  private async animateUnitDie(id: number, type: string): Promise<void> {
-    const info = this.world.getUnitInfo(type);
+  private async animateUnitDie(id: number): Promise<void> {
     const sprite = this.getUnitSprite(id);
     const tw = this.tweens.create(sprite);
     tw.wait(175);
-    if (info.role === UnitRole.Monster || info.role === UnitRole.Player) {
-      // Fall over
-      tw.to(
-        {
-          rotation: Math.PI / 2,
-        },
-        250
-      );
-    }
     tw.to(
       {
         opacity: 0,
@@ -761,12 +756,8 @@ export class WorldScene extends Scene {
       case "poison":
         this.poisonValue.set(String(count));
         break;
-      case "food":
-        if (this.world.player.type === "playerAlive") {
-          this.foodValue.set(String(count));
-        } else {
-          this.foodValue.set("-");
-        }
+      case "magic":
+        this.magicValue.set(String(count));
         break;
       case "key":
         this.keysValue.set(String(count));
