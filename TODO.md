@@ -3,6 +3,7 @@
 ## 🐛 Bugs
 
 - Player can move during intro
+- Attacking/interacting with an entity on stairsDown will warp the player
 
 ## Game Loop
 
@@ -27,6 +28,10 @@
   - Show credits
   - Back to title
 
+## Balance
+
+- Item costs
+
 ## 🍱 Content
 
 - Inner room chunks (or more varied room templates for big empty rooms)
@@ -37,7 +42,6 @@
   - Mold
     - Grow more slowly and/or die more often
     - Different kinds of mold
-      - Only
   - Gas
   - Fire
   - Green Slime

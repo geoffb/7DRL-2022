@@ -12,15 +12,7 @@
       "data/levels.json",
       "data/rooms.json",
       "data/prefabs.json",
-      "data/tilesets/sewer.json",
-      "data/maps/plus.json",
-      "data/maps/cemetery1.json",
-      "data/maps/crypt0.json",
-      "data/maps/crypt1.json",
-      "data/maps/crypt2.json",
-      "data/maps/crypt3.json",
-      "data/maps/crypt4.json",
-      "data/maps/cryptShop.json"
+      "data/tilesets/sewer.json"
     ],
     "images": [
       "images/sprites.png",
@@ -105,7 +97,7 @@
       "giant_skeleton"
     ],
     "loot_pot": ["coin"],
-    "loot_chest": ["key", "coin", "antidote"],
+    "loot_chest": ["key", "antidote", "potion_health"],
     "loot_monster": ["", "", "", "", "", "", "", "heart", "coin", "key"],
     "loot_doodad": ["", "", "", "", "coin"]
   }

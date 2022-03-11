@@ -8,15 +8,6 @@
     "sprite": 15
   },
 
-  "playerAlive": {
-    "drawOrder": 3,
-    "health": 3,
-    "name": "Player",
-    "role": "player",
-    "solid": true,
-    "sprite": 30
-  },
-
   "mold": {
     "behavior": "replicate",
     "drawOrder": 0,
@@ -165,7 +156,7 @@
 
   "heart": {
     "data": {
-      "cost": 50,
+      "cost": 5,
       "heal": 1
     },
     "drawOrder": 2,
@@ -174,6 +165,19 @@
     "role": "restore_health",
     "solid": false,
     "sprite": 11
+  },
+
+  "potion_health": {
+    "data": {
+      "cost": 25,
+      "heal": 5
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Health Potion",
+    "role": "restore_health",
+    "solid": false,
+    "sprite": 13
   },
 
   "antidote": {
