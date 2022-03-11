@@ -13,7 +13,7 @@
   "dependencies": {
     "@mousepox/dungen": "^0.2.0",
     "@mousepox/jack": "^0.6.6",
-    "@mousepox/math": "^1.6.1",
+    "@mousepox/math": "^1.7.0",
     "@mousepox/tween": "^0.3.0"
   },
   "devDependencies": {

@@ -159,12 +159,16 @@ export class World {
     return this.player.health < 1;
   }
 
+  public get environment(): string {
+    return this.level.environment;
+  }
+
   constructor(data: DataCache) {
     // this.data = data;
     this.config = data.get("data/config.json");
     this.prefabs = data.get("data/prefabs.json");
 
-    this.level = new Level(data.get("data/rooms.json"));
+    this.level = new Level(data);
 
     this.player = this.createUnit("player");
 
@@ -386,14 +390,18 @@ export class World {
     }
   }
 
-  private generateMap(_floor: number) {
-    this.level.generate(2, 3);
+  private generateMap(floor: number) {
+    if (floor === 0) {
+      this.level.load("library");
+    } else {
+      this.level.generate(2, 3, "sewer");
+    }
 
     this.map.resize(this.level.map.width, this.level.map.height);
     this.map.copy(this.level.map);
 
     for (const entity of this.level.entities) {
-      this.spawnUnit(entity.type, entity.x, entity.y);
+      this.spawnUnit(entity.type, entity.x, entity.y, true);
     }
 
     // this.affix = undefined;
@@ -478,34 +486,11 @@ export class World {
 
   /** Unload the currently loaded map and store it in the map cache */
   private unloadMap() {
-    // Bail out of a floor isn't currently loaded
-    if (this.floorIndex < 0) {
-      return;
-    }
-
     // Reset steps
     this.steps = 0;
 
-    // Pack units
-    const units: IUnitSerialization[] = [];
-    for (const [, unit] of this.units) {
-      if (unit.info.role === UnitRole.Player) {
-        continue;
-      }
-      units.push(unit.serialize());
-    }
-
     // Clear out active units
     this.units.clear();
-
-    // Pack map into map cache
-    this.packMap(this.floorIndex, {
-      height: this.map.height,
-      // rooms,
-      units,
-      tiles: this.map.cells.slice(),
-      width: this.map.width,
-    });
   }
 
   private moveUnit(unit: Unit, direction: Direction) {
@@ -604,12 +589,14 @@ export class World {
   }
 
   /** Spawn a new unit into the world at a specified location */
-  private spawnUnit(type: string, x: number, y: number): Unit {
+  private spawnUnit(type: string, x: number, y: number, quiet = false): Unit {
     const unit = this.createUnit(type);
     unit.asleep = true;
     unit.position.set(x, y);
     this.addUnit(unit);
-    this.onAction(WorldAction.UnitSpawn, unit);
+    if (!quiet) {
+      this.onAction(WorldAction.UnitSpawn, unit);
+    }
     return unit;
   }
 

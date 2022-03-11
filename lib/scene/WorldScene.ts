@@ -36,7 +36,7 @@ export class WorldScene extends Scene {
 
   private worldView: Actor;
 
-  private tileset: SpriteSheet;
+  private tilesets: Record<string, SpriteSheet>;
 
   private sprites: SpriteSheet;
 
@@ -94,7 +94,9 @@ export class WorldScene extends Scene {
     this.poisonValue.set("0");
     this.keysValue.set(String(this.world.inventory.get("key")));
     this.floorValue.set("0");
+    this.floorValue.visible = world.floor > 0;
     this.stepsValue.set("0");
+    this.stepsValue.visible = this.floorValue.visible;
     this.goldValue.set("0");
 
     this.autoMap.resize(world.map.width, world.map.height);
@@ -246,7 +248,11 @@ export class WorldScene extends Scene {
       this.animatePlayerHumanityRestore.bind(this)
     );
 
-    this.tileset = new SpriteSheet(this.images.get("images/sewer.png"), 16, 16);
+    this.tilesets = {
+      library: new SpriteSheet(this.images.get("images/library.png"), 16, 16),
+      sewer: new SpriteSheet(this.images.get("images/sewer.png"), 16, 16),
+    };
+
     this.sprites = new SpriteSheet(
       this.images.get("images/sprites.png"),
       16,
@@ -265,7 +271,7 @@ export class WorldScene extends Scene {
     this.mapView = new TileMap(
       this.width,
       this.height - UIBarHeight,
-      this.tileset
+      this.tilesets.library
     );
     this.worldView.addChild(this.mapView);
 
@@ -587,8 +593,6 @@ export class WorldScene extends Scene {
     health: number,
     source?: string
   ): Promise<void> {
-    console.log("damage from " + source);
-
     // TODO: Polish unit health change
     if (amount !== 0) {
       if (amount < 0) {
@@ -684,8 +688,14 @@ export class WorldScene extends Scene {
     // Trigger map change in the sim
     const floor = this.world.floor + (dir === "down" ? 1 : -1);
     this.world.loadMap(floor);
+
+    this.mapView.sheet = this.tilesets[this.world.environment];
+
     this.floorValue.set(String(floor));
+    this.floorValue.visible = floor > 0;
+
     this.stepsValue.set(String(this.world.steps));
+    this.stepsValue.visible = this.floorValue.visible;
 
     this.autoMap.resize(this.world.map.width, this.world.map.height);
     this.autoMap.update();

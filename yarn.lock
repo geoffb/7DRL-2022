@@ -18,10 +18,10 @@
     "@mousepox/tween" "^0.3.0"
     howler "^2.2.0"
 
-"@mousepox/math@^1.1.0", "@mousepox/math@^1.6.0", "@mousepox/math@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@mousepox/math/-/math-1.6.1.tgz#834916ac6be0acc3df345f70cce2ce92270bb926"
-  integrity sha512-ljL4lGczTsziROHpp1Mf4Yn94FhciqCavEXI1bIWJugPcO5bkiKX3usMMqBYlPdMx1vxBiWzHkzYiFbgonMxkw==
+"@mousepox/math@^1.1.0", "@mousepox/math@^1.6.0", "@mousepox/math@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@mousepox/math/-/math-1.7.0.tgz#68da1d63e87b3d7c97c3dbcf252c3612a2ad453a"
+  integrity sha512-FH1Ga+OoQh4fnckT++O8hjLp165EX6Ntv87ymoUm9FZ3BJ7Skdbnp6jcCFRYxM1qaAhUUBJ8jICiVnF4sRlbTQ==
 
 "@mousepox/tween@^0.3.0":
   version "0.3.0"

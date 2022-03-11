@@ -86,7 +86,7 @@ export class TitleScene extends Scene {
   }
 
   protected init() {
-    const tiles = new SpriteSheet(this.images.get("images/title.png"), 16, 16);
+    // const tiles = new SpriteSheet(this.images.get("images/title.png"), 16, 16);
     const icons = new SpriteSheet(
       this.images.get("images/sprites-small.png"),
       8,

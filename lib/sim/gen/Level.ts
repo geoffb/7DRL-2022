@@ -4,6 +4,7 @@ import {
   RoomRole,
   RoomShapeSymbols,
 } from "@mousepox/dungen";
+import { DataCache } from "@mousepox/jack";
 import { Grid, Random, distance, IPoint } from "@mousepox/math";
 
 export interface LevelEntity {
@@ -16,6 +17,17 @@ interface RoomTemplates {
   size: number;
   roles: Record<string, Record<string, string[]>>;
   templates: Record<string, number[]>;
+}
+
+interface Levels {
+  [index: string]: {
+    environment: string;
+    width: number;
+    height: number;
+    start: IPoint;
+    tiles: number[];
+    entities?: LevelEntity[];
+  };
 }
 
 const RoomRoles = ["generic", "start", "boss", "end"];
@@ -41,6 +53,8 @@ export class Level {
 
   private readonly rooms: RoomTemplates;
 
+  private readonly levels: Levels;
+
   private readonly hints: Map<TemplateTile, TemplateHint[]> = new Map();
 
   private readonly spawns = new Grid();
@@ -48,6 +62,8 @@ export class Level {
   public readonly start: IPoint = { x: 0, y: 0 };
 
   public readonly end: IPoint = { x: 0, y: 0 };
+
+  public environment = "";
 
   private blueprint: Floor;
 
@@ -61,13 +77,55 @@ export class Level {
     );
   }
 
-  constructor(rooms: RoomTemplates) {
-    this.rooms = rooms;
+  constructor(data: DataCache) {
+    this.levels = data.get("data/levels.json");
+    this.rooms = data.get("data/rooms.json");
   }
 
-  public generate(width: number, height: number): void {
-    // Clear entities
+  /** Clear level state */
+  public clear(): void {
+    this.environment = "";
+    this.map.resize(0, 0);
+    this.map.fill(0);
     this.entities.length = 0;
+  }
+
+  /** Load a level from data */
+  public load(name: string): void {
+    this.clear();
+
+    // Load level
+    const level = this.levels[name];
+    if (level === undefined) {
+      console.error(`Invalid level: ${name}`);
+      return;
+    }
+
+    // Set environment
+    this.environment = level.environment;
+    this.start.x = level.start.x;
+    this.start.y = level.start.y;
+
+    // Resize and populate map
+    this.map.resize(level.width, level.height);
+    this.map.cells = level.tiles.slice();
+
+    // Populate entities
+    if (level.entities !== undefined) {
+      for (const entity of level.entities) {
+        this.entities.push({
+          type: entity.type,
+          x: entity.x,
+          y: entity.y,
+        });
+      }
+    }
+  }
+
+  public generate(width: number, height: number, environment: string): void {
+    this.clear();
+
+    this.environment = environment;
 
     // Generate blueprint
     const generator = new StandardGenerator(width, height);

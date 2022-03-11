@@ -9,6 +9,7 @@
   "preload": {
     "data": [
       "data/automap.json",
+      "data/levels.json",
       "data/rooms.json",
       "data/prefabs.json",
       "data/tilesets/sewer.json",
@@ -22,9 +23,9 @@
       "data/maps/cryptShop.json"
     ],
     "images": [
-      "images/title.png",
       "images/sprites.png",
       "images/sprites-small.png",
+      "images/library.png",
       "images/sewer.png"
     ],
     "sounds": {

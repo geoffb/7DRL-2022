@@ -3,11 +3,33 @@
 ## 🐛 Bugs
 
 - Player can move during intro
-- Entities persist between levels/restarts
+
+## Game Loop
+
+- Title
+  - Play -> World
+- World
+  - Start in Wizard Study
+    - Intro
+      - Only show when unseen
+      - Show a series of banner messages:
+        - "Thank goodness, you've finally arrived!"
+        - "We are in terrible need of your talents."
+        - "Our sewer is rather filthy!"
+        - "No time to waste!"
+    - Exit to first gameplay floor
+      - Play game
+      - Win -> Won
+      - Lose -> Lost
+- Lost
+  - Restart -> World
+- Won
+  - Show credits
+  - Back to title
 
 ## 🍱 Content
 
-- Inner room chunks or more
+- Inner room chunks (or more varied room templates for big empty rooms)
 - Player
   - New sprite
   - Player abilities? (beyond bump attack/interact)
@@ -32,8 +54,6 @@
 
 ## 💫 Polish
 
-- Randomize wall tiles with variants (e.g. grate, pipe)
-- Display sim steps
 - New favicon
 
 ## 🧱 Infrastructure
