@@ -345,8 +345,7 @@ export class World {
   private generateMap(floor: number) {
     // Generate level
     if (floor === 0) {
-      this.level.load("shop");
-      // this.level.load("library");
+      this.level.load("library");
     } else if (floor % 3 === 0) {
       this.level.load("shop");
     } else {

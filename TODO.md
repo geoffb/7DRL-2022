@@ -3,8 +3,7 @@
 ## 🐛 Bugs
 
 - Player can move during intro
-- Attacking/interacting with an entity on stairsDown will warp the player
-- "Doors" can spawn outside of hints?
+- Attacking/interacting with an entity on stairsDown will warp the player (same for pickups underneath monsters)
 
 ## Game Loop
 
@@ -29,13 +28,8 @@
   - Show credits
   - Back to title
 
-## Balance
-
-- Item costs
-
 ## 🍱 Content
 
-- Inner room chunks (or more varied room templates for big empty rooms)
 - Player
   - New sprite
   - Player abilities? (beyond bump attack/interact)
@@ -47,15 +41,7 @@
   - Fire
   - Green Slime
   - Purple Slime
-- Pickups
-  - Restore health
-  - Remove poison
-  - Gold
-- Doors
-  - Add "mold" door (adds poison when crossing)
 - Containers
-  - Chest - Always something very desirable
-  - "crate" - Always something good
   - "pot" - A mix of good and bad
   - "urn?" - Often bad, but rarely really good
 - New intro

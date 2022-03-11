@@ -24,7 +24,7 @@ export class LostScene extends Scene {
 
   protected init() {
     // Background
-    const bg = new Box(this.width, this.height, Palette.Red);
+    const bg = new Box(this.width, this.height, Palette.DarkRed);
     bg.position.set(this.width / 2, this.height / 2);
     this.addChild(bg);
 

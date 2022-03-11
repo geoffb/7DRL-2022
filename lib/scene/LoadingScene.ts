@@ -1,4 +1,5 @@
 import { Box, Scene, SpriteText } from "@mousepox/jack";
+import { Palette } from "./ui/Palette";
 
 export class LoadingScene extends Scene {
   private bg: Box;
@@ -11,7 +12,7 @@ export class LoadingScene extends Scene {
 
   protected init() {
     // Init background
-    this.bg = new Box(this.width, this.height, "#140C1C");
+    this.bg = new Box(this.width, this.height, Palette.Black);
     this.bg.position.set(this.width / 2, this.height / 2);
     this.addChild(this.bg);
 

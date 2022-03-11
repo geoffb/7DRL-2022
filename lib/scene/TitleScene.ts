@@ -94,7 +94,7 @@ export class TitleScene extends Scene {
     );
 
     // Init background
-    const bg = new Box(this.width, this.height, Palette.Green);
+    const bg = new Box(this.width, this.height, Palette.DarkGreen);
     bg.position.set(this.width / 2, this.height / 2);
     this.addChild(bg);
 
