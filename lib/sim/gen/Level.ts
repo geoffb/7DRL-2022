@@ -6,16 +6,17 @@ import {
 } from "@mousepox/dungen";
 import { DataCache } from "@mousepox/jack";
 import { Grid, Random, distance, IPoint } from "@mousepox/math";
+import { BagSet } from "../BagSet";
 
 export interface LevelEntity {
   type: string;
   x: number;
   y: number;
+  forSale?: boolean;
 }
 
 interface RoomTemplates {
   size: number;
-  roles: Record<string, Record<string, string[]>>;
   templates: Record<string, number[]>;
 }
 
@@ -49,6 +50,8 @@ export class Level {
 
   public readonly entities: LevelEntity[] = [];
 
+  private readonly bags: BagSet<string>;
+
   private readonly random = new Random();
 
   private readonly rooms: RoomTemplates;
@@ -77,7 +80,8 @@ export class Level {
     );
   }
 
-  constructor(data: DataCache) {
+  constructor(data: DataCache, bags: BagSet<string>) {
+    this.bags = bags;
     this.levels = data.get("data/levels.json");
     this.rooms = data.get("data/rooms.json");
   }
@@ -113,11 +117,21 @@ export class Level {
     // Populate entities
     if (level.entities !== undefined) {
       for (const entity of level.entities) {
-        this.entities.push({
-          type: entity.type,
-          x: entity.x,
-          y: entity.y,
-        });
+        if (entity.type === "shopItem") {
+          const type = this.bags.get("shop");
+          this.entities.push({
+            type,
+            x: entity.x,
+            y: entity.y,
+            forSale: true,
+          });
+        } else {
+          this.entities.push({
+            type: entity.type,
+            x: entity.x,
+            y: entity.y,
+          });
+        }
       }
     }
   }
@@ -221,12 +235,8 @@ export class Level {
   private placeRoomGeometry(): void {
     for (const room of this.blueprint.getRooms()) {
       const role = RoomRoles[room.role];
-      const templates = this.rooms.roles[role];
-
       const shape = RoomShapeSymbols[room.shape];
-      const pool = templates[shape];
-
-      const name = this.random.choice(pool);
+      const name = this.bags.get(`rooms_${role}_${shape}`);
       const template = this.rooms.templates[name];
 
       const grid = new Grid(this.roomSize, this.roomSize);
@@ -293,7 +303,7 @@ export class Level {
     for (let i = 0; i < count; i++) {
       const spot = this.popValidSpot(hints);
       if (spot !== undefined) {
-        const type = this.random.choice(["door", "door", "spikes"]);
+        const type = this.bags.get("doors");
         this.placeEntity(type, spot.x, spot.y);
       }
     }
@@ -318,7 +328,7 @@ export class Level {
     for (let i = 0; i < count; i++) {
       const spot = this.popValidSpot(hints);
       if (spot !== undefined) {
-        const type = this.random.choice(["coin", "chest"]);
+        const type = this.bags.get("treasure");
         this.placeEntity(type, spot.x, spot.y);
       }
     }
@@ -343,7 +353,7 @@ export class Level {
     for (let i = 0; i < count; i++) {
       const spot = this.popValidSpot(hints);
       if (spot !== undefined) {
-        const type = this.random.choice(["slime"]);
+        const type = this.bags.get("monsters");
         this.placeEntity(type, spot.x, spot.y);
       }
     }

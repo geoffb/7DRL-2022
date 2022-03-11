@@ -6,16 +6,10 @@ import {
   Random,
   Vector2,
 } from "@mousepox/math";
-import { Bag } from "./Bag";
+import { BagSet } from "./BagSet";
 import { Inventory } from "./Inventory";
 import { getWalkableTiles } from "./tiled";
-import {
-  IUnitInfo,
-  IUnitSerialization,
-  Unit,
-  UnitBehavior,
-  UnitRole,
-} from "./Unit";
+import { IUnitInfo, Unit, UnitBehavior, UnitRole } from "./Unit";
 import { Level } from "./gen/Level";
 
 /** Action types emitted by the world */
@@ -38,13 +32,6 @@ export const enum WorldAction {
   PlayerInventoryChange,
   PlayerStarve,
   PlayerHumanityRestore,
-}
-
-interface IMapSerialization {
-  width: number;
-  height: number;
-  units: IUnitSerialization[];
-  tiles: number[];
 }
 
 export const enum Direction {
@@ -104,13 +91,6 @@ function getUnitDistance(unit: Unit, target: Unit): number {
   );
 }
 
-interface IWorldConfig {
-  start: string;
-  bags: {
-    [index: string]: any;
-  };
-}
-
 export class World {
   public readonly units: Map<number, Unit> = new Map();
 
@@ -121,10 +101,6 @@ export class World {
   public steps = 0;
 
   public affix: string | undefined;
-
-  // private readonly data: DataCache;
-
-  private readonly config: IWorldConfig;
 
   private readonly prefabs: Record<string, IUnitInfo>;
 
@@ -149,7 +125,7 @@ export class World {
   /** Index of the currently active floor  */
   private floorIndex = -1;
 
-  private readonly bags: Map<string, any> = new Map();
+  private readonly bags: BagSet<string>;
 
   public get floor(): number {
     return this.floorIndex;
@@ -164,18 +140,15 @@ export class World {
   }
 
   constructor(data: DataCache) {
-    // this.data = data;
-    this.config = data.get("data/config.json");
     this.prefabs = data.get("data/prefabs.json");
 
-    this.level = new Level(data);
+    // Init bags
+    const bagsData = data.get("data/bags.json");
+    this.bags = new BagSet(this.rng, bagsData);
+
+    this.level = new Level(data, this.bags);
 
     this.player = this.createUnit("player");
-
-    // Init bags
-    for (const name in this.config.bags) {
-      this.bags.set(name, new Bag(this.rng, this.config.bags[name]));
-    }
 
     // Parse tileset data
     const tileset = data.get("data/tilesets/sewer.json");
@@ -201,6 +174,7 @@ export class World {
 
     this.inventory.empty();
     this.inventory.add("key", 3);
+    // this.inventory.add("gold", 99);
 
     this.units.clear();
     this.mapCache.clear();
@@ -224,16 +198,8 @@ export class World {
     // Unload current map first
     this.unloadMap();
 
-    // Load map data
-    const map = this.unpackMap(floor);
-    if (map !== undefined) {
-      // Load map from cached data
-      this.map.resize(map.width, map.height);
-      this.map.cells = map.tiles;
-    } else {
-      // Generate a new map
-      this.generateMap(floor);
-    }
+    // Generate a new map
+    this.generateMap(floor);
 
     // Place player within room
     this.addUnit(this.player);
@@ -374,115 +340,29 @@ export class World {
     return false;
   }
 
-  /** Unpack map data from the map cache */
-  private packMap(floor: number, data: IMapSerialization) {
-    this.mapCache.set(floor, JSON.stringify(data));
-  }
-
-  /** Pack map data into the map cache */
-  private unpackMap(floor: number): IMapSerialization | undefined {
-    const data = this.mapCache.get(floor);
-    if (data !== undefined) {
-      this.mapCache.delete(floor);
-      return JSON.parse(data);
-    } else {
-      return undefined;
-    }
-  }
-
   private generateMap(floor: number) {
+    // Generate level
     if (floor === 0) {
       this.level.load("library");
+    } else if (floor % 3 === 0) {
+      this.level.load("shop");
     } else {
+      // TODO: Scale size based upon floor depth
       this.level.generate(2, 3, "sewer");
     }
 
+    // Update map
     this.map.resize(this.level.map.width, this.level.map.height);
     this.map.copy(this.level.map);
 
+    // Spawn units
     for (const entity of this.level.entities) {
-      this.spawnUnit(entity.type, entity.x, entity.y, true);
+      const unit = this.spawnUnit(entity.type, entity.x, entity.y, true);
+      if (entity.forSale) {
+        unit.forSale = true;
+      }
     }
-
-    // this.affix = undefined;
-    // if (floor === 0) {
-    //   // DEBUG: Uncomment to force a specific map/variant
-    //   // this.loadMapFromData("crypt4", "unit_a");
-    //   this.loadMapFromData(this.config.start);
-    // } else if (floor % 4 === 0) {
-    //   this.loadMapFromData(this.getFromBag("maps_rest"));
-    // } else {
-    //   if (floor % 5 === 0) {
-    //     this.affix = this.getFromBag("affixes");
-    //   }
-    //   this.loadMapFromData(this.getFromBag("maps_floors"));
-    // }
   }
-
-  /** Load map from data cache */
-  //   private loadMapFromData(name: string, layout?: string) {
-  //     // Get map data
-  //     const data = this.data.get(`data/maps/${name}.json`) as ITiledMap;
-  //
-  //     // Initialize map
-  //     // Get the first tile layer found
-  //     const tiles = getLayersByType<ITiledTileLayer>(data, "tilelayer")[0];
-  //     this.map.resize(data.width, data.height);
-  //     for (let i = 0; i < tiles.data.length; i++) {
-  //       this.map.cells[i] = tiles.data[i] - 1;
-  //     }
-  //
-  //     let group: ITiledObjectGroup | undefined;
-  //     if (layout !== undefined) {
-  //       // Specific object group
-  //       group = getLayerByName<ITiledObjectGroup>(data, layout);
-  //     } else {
-  //       // Chose one of the available object groups
-  //       const objectGroups = getLayersByType<ITiledObjectGroup>(
-  //         data,
-  //         "objectgroup"
-  //       );
-  //       group = layout ?? this.rng.choice(objectGroups);
-  //     }
-  //
-  //     if (group !== undefined) {
-  //       // Create units from object group
-  //       for (const unitData of group.objects) {
-  //         // Determine map grid location
-  //         const mapX = Math.floor(unitData.x / 16);
-  //         const mapY = Math.floor(unitData.y / 16 - 1);
-  //
-  //         // Ensure object has a valid type
-  //         if (unitData.type.length === 0) {
-  //           console.warn(`Skipping undefined unit type at: ${mapX}, ${mapY}`);
-  //           continue;
-  //         }
-  //
-  //         // Create unit structure
-  //         const unit: IUnitSerialization = {
-  //           data: {},
-  //           sale: false,
-  //           ttl: -1,
-  //           type: unitData.type,
-  //           x: mapX,
-  //           y: mapY,
-  //         };
-  //
-  //         // Transfer custom object properties to free-form unit data
-  //         if (unitData.properties) {
-  //           for (const prop of unitData.properties) {
-  //             unit.data[prop.name] = prop.value;
-  //           }
-  //         }
-  //
-  //         // Add unit
-  //         const u = Unit.deserialize(unit, this.getUnitInfo(unit.type));
-  //         this.addUnit(u);
-  //       }
-  //     } else {
-  //       console.error("Invalid object group");
-  //     }
-  //   }
 
   /** Unload the currently loaded map and store it in the map cache */
   private unloadMap() {
@@ -568,7 +448,7 @@ export class World {
 
       // Spawn loot on death
       if (unit.info.data?.loot !== undefined) {
-        const drop: string = this.getFromBag(unit.info.data.loot);
+        const drop = this.bags.get(unit.info.data.loot);
         if (drop !== "") {
           this.spawnUnit(drop, unit.position.x, unit.position.y);
         }
@@ -606,7 +486,9 @@ export class World {
     // Handle shop logic before attempting to interact
     if (
       target.forSale &&
-      (info.role === UnitRole.Pickup || info.role === UnitRole.RestoreHealth)
+      (info.role === UnitRole.Pickup ||
+        info.role === UnitRole.RestoreHealth ||
+        info.role === UnitRole.CurePoison)
     ) {
       const cost = info.data?.cost ?? 0;
       // Negate the sale transation if:
@@ -1055,15 +937,6 @@ export class World {
       this.behaviorRandom(unit);
     } else {
       this.moveUnit(unit, direction);
-    }
-  }
-
-  private getFromBag<T>(name: string): T {
-    const bag = this.bags.get(name) as Bag<T>;
-    if (bag !== undefined) {
-      return bag.grab();
-    } else {
-      throw new Error(`Invalid bag: ${name}`);
     }
   }
 

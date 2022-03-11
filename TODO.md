@@ -4,6 +4,7 @@
 
 - Player can move during intro
 - Attacking/interacting with an entity on stairsDown will warp the player
+- "Doors" can spawn outside of hints?
 
 ## Game Loop
 
@@ -52,6 +53,11 @@
   - Gold
 - Doors
   - Add "mold" door (adds poison when crossing)
+- Containers
+  - Chest - Always something very desirable
+  - "crate" - Always something good
+  - "pot" - A mix of good and bad
+  - "urn?" - Often bad, but rarely really good
 - New intro
 - Meta?
 - Affixes?

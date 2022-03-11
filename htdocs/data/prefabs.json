@@ -33,7 +33,7 @@
 
   "key": {
     "data": {
-      "cost": 75,
+      "cost": 3,
       "pickup": {
         "amount": 1,
         "type": "key"
@@ -45,6 +45,21 @@
     "role": "pickup",
     "solid": false,
     "sprite": 8
+  },
+
+  "spore": {
+    "data": {
+      "pickup": {
+        "amount": 1,
+        "type": "poison"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Spore",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 18
   },
 
   "door": {
@@ -156,7 +171,7 @@
 
   "heart": {
     "data": {
-      "cost": 5,
+      "cost": 1,
       "heal": 1
     },
     "drawOrder": 2,
@@ -169,7 +184,7 @@
 
   "potion_health": {
     "data": {
-      "cost": 25,
+      "cost": 5,
       "heal": 5
     },
     "drawOrder": 2,
@@ -182,8 +197,8 @@
 
   "antidote": {
     "data": {
-      "cost": 10,
-      "cure": 25
+      "cost": 5,
+      "cure": 5
     },
     "drawOrder": 2,
     "health": 1,
@@ -191,15 +206,6 @@
     "role": "cure_poison",
     "solid": false,
     "sprite": 12
-  },
-
-  "powerBlock": {
-    "drawOrder": 3,
-    "health": null,
-    "name": "Power Gloves",
-    "role": "monster",
-    "solid": true,
-    "sprite": 17
   },
 
   "candles": {
@@ -250,30 +256,16 @@
     "sprite": 35
   },
 
-  "elixir_life": {
+  "crate": {
     "data": {
-      "cost": 500,
-      "pickup": {
-        "amount": 200,
-        "type": "food"
-      }
+      "loot": "loot_crate"
     },
-    "drawOrder": 2,
+    "drawOrder": 1,
     "health": 1,
-    "name": "Elixir of Life",
-    "role": "pickup",
-    "solid": false,
-    "sprite": 32
-  },
-
-  "mushroom_heal": {
-    "data": { "cost": 150, "heal": 5 },
-    "drawOrder": 3,
-    "health": 1,
-    "name": "Healing Mushroom",
-    "role": "restore_health",
-    "solid": false,
-    "sprite": 43
+    "name": "Crate",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 34
   },
 
   "ghost": {
@@ -311,15 +303,6 @@
     "sprite": 25
   },
 
-  "campfire": {
-    "drawOrder": 2,
-    "health": 1,
-    "name": "Campfire",
-    "role": "trap",
-    "solid": false,
-    "sprite": 28
-  },
-
   "flame": {
     "drawOrder": 2,
     "health": 1,
@@ -333,14 +316,6 @@
     "drawOrder": 0,
     "health": 1,
     "name": "Monster Spawn",
-    "solid": false,
-    "sprite": -1
-  },
-
-  "shopSpawn": {
-    "drawOrder": 0,
-    "health": 1,
-    "name": "Shop Spawn",
     "solid": false,
     "sprite": -1
   },

@@ -1,0 +1,32 @@
+{
+  "rooms_start_U": ["U_tiny"],
+  "rooms_start_I": ["I_tiny"],
+  "rooms_start_L": ["L_tiny"],
+  "rooms_start_T": ["T_tiny"],
+  "rooms_start_X": ["X_tiny"],
+
+  "rooms_end_U": ["U_cozy"],
+  "rooms_end_I": ["I_cozy"],
+  "rooms_end_L": ["L_cozy"],
+  "rooms_end_T": ["T_cozy"],
+  "rooms_end_X": ["X_cozy"],
+
+  "rooms_generic_U": ["U_big", "U_circle", "U_diamond", "U_cubby"],
+  "rooms_generic_I": ["I_big", "I_hallway", "I_cozy", "I_enclave", "I_zig"],
+  "rooms_generic_L": ["L_big", "L_hallway", "L_cozy", "L_maze"],
+  "rooms_generic_T": ["T_big", "T_hallway", "T_cozy"],
+  "rooms_generic_X": ["X_big", "X_hallway", "X_cozy"],
+
+  "doors": ["door", "door", "door", "spikes", "spore"],
+  "treasure": ["coin", "coin", "coin", "heart", "crate", "crate", "chest"],
+  "monsters": ["slime"],
+
+  "loot_chest": ["key", "antidote", "potion_health"],
+  "loot_crate": ["key", "heart", "heart", "coin", "coin"],
+  "loot_monster": ["", "", "", "", "", "spore", "spore", "heart", "coin"],
+
+  "shop": ["key", "heart", "antidote", "potion_health"],
+
+  "loot_pot": ["coin"],
+  "loot_doodad": ["", "", "", "", "coin"]
+}

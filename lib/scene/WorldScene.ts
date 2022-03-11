@@ -99,6 +99,10 @@ export class WorldScene extends Scene {
     this.stepsValue.visible = this.floorValue.visible;
     this.goldValue.set("0");
 
+    if (this.world.environment !== "") {
+      this.mapView.sheet = this.tilesets[this.world.environment];
+    }
+
     this.autoMap.resize(world.map.width, world.map.height);
     this.autoMap.update();
 
@@ -622,6 +626,9 @@ export class WorldScene extends Scene {
         this.showOverlay(75, color);
         this.hideOverlay(75, 75);
         this.shake(this.worldView, 150, 4, 1);
+        if (source === "poison") {
+          this.showMessage("You are poisoned!");
+        }
       }
     }
 

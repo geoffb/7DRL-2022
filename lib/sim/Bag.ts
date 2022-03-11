@@ -1,6 +1,6 @@
 import { Random } from "@mousepox/math";
 
-export class Bag<T> {
+export class Bag<T = unknown> {
   private readonly rng: Random;
 
   private readonly values: T[];
