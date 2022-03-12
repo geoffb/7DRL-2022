@@ -626,7 +626,7 @@ export class World {
                     }
                 }
             }
-            this.spawnUnit("slime", unit.position.x, unit.position.y);
+            this.spawnUnit("slime_green", unit.position.x, unit.position.y);
         }
         else if ((neighbors < 1 || neighbors > 4) && Math.random() > 0.5) {
             this.removeUnit(unit);
