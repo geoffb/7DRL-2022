@@ -30,7 +30,14 @@
     "chest"
   ],
 
-  "monsters": ["slime"],
+  "monsters": [
+    "slime_orange",
+    "slime_orange",
+    "slime_orange",
+    "slime_green",
+    "slime_green",
+    "slime_blue"
+  ],
 
   "loot_chest": ["key", "elixir_health", "elixir_magic", "elixir_cure"],
 
@@ -44,19 +51,13 @@
     "mote_cure"
   ],
 
-  "loot_monster": [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "heart",
-    "mote_magic",
-    "mote_cure",
-    "coin"
-  ],
+  "loot_monster": ["", "", "", "", "", "", "", "heart", "coin"],
+
+  "loot_orange": ["", "", "", "", "", "", "mote_cure", "mote_cure", "coin"],
+
+  "loot_blue": ["", "", "", "", "", "", "mote_magic", "mote_magic", "coin"],
+
+  "loot_green": ["", "", "", "", "", "", "mote_poison", "mote_poison", "coin"],
 
   "shop": [
     "key",

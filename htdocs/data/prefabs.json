@@ -18,17 +18,43 @@
     "flat": true
   },
 
-  "slime": {
+  "slime_orange": {
     "behavior": "random",
     "data": {
-      "loot": "loot_monster"
+      "loot": "loot_orange"
     },
     "drawOrder": 3,
     "health": 1,
-    "name": "Slime",
+    "name": "Orange Slime",
     "role": "monster",
     "solid": true,
     "sprite": 1
+  },
+
+  "slime_green": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_green"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Green Slime",
+    "role": "monster",
+    "solid": true,
+    "sprite": 2
+  },
+
+  "slime_blue": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_blue"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Blue Slime",
+    "role": "monster",
+    "solid": true,
+    "sprite": 3
   },
 
   "key": {
