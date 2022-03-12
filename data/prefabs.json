@@ -1,0 +1,415 @@
+{
+  "player": {
+    "drawOrder": 3,
+    "health": 20,
+    "name": "Player",
+    "role": "player",
+    "solid": true,
+    "sprite": 15
+  },
+
+  "mold": {
+    "behavior": "replicate",
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Mold",
+    "solid": false,
+    "sprite": 0,
+    "flat": true
+  },
+
+  "slime_orange": {
+    "behavior": "random",
+    "data": {
+      "loot": "loot_orange"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Orange Slime",
+    "role": "monster",
+    "solid": true,
+    "sprite": 1
+  },
+
+  "slime_green": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_green"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Green Slime",
+    "role": "monster",
+    "solid": true,
+    "sprite": 2
+  },
+
+  "slime_blue": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_blue"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Blue Slime",
+    "role": "monster",
+    "solid": true,
+    "sprite": 3
+  },
+
+  "key": {
+    "data": {
+      "cost": 5,
+      "pickup": {
+        "amount": 1,
+        "type": "key"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Key",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 8
+  },
+
+  "mote_cure": {
+    "data": {
+      "cost": 1,
+      "cure": 5
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Mote of Cure",
+    "role": "cure_poison",
+    "solid": false,
+    "sprite": 18
+  },
+
+  "mote_magic": {
+    "data": {
+      "cost": 3,
+      "pickup": {
+        "amount": 1,
+        "type": "magic"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Mote of Magic",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 19
+  },
+
+  "mote_poison": {
+    "data": {
+      "pickup": {
+        "amount": 3,
+        "type": "poison"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Mote of Poison",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 20
+  },
+
+  "door": {
+    "data": "key",
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Door",
+    "role": "door",
+    "solid": true,
+    "sprite": 9,
+    "flat": true
+  },
+
+  "coin": {
+    "data": {
+      "pickup": {
+        "amount": 1,
+        "type": "gold"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Gold Coin",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 10
+  },
+
+  "bat": {
+    "behavior": "random",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Bat",
+    "role": "monster",
+    "solid": true,
+    "sprite": 29
+  },
+
+  "zombie": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Zombie",
+    "role": "monster",
+    "solid": true,
+    "sprite": 31
+  },
+
+  "ghoul": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 2,
+    "name": "Ghoul",
+    "role": "monster",
+    "solid": true,
+    "sprite": 39
+  },
+
+  "giant_skeleton": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 2,
+    "name": "Giant Skeleton",
+    "role": "monster",
+    "solid": true,
+    "sprite": 49
+  },
+
+  "spikes": {
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Spikes",
+    "role": "trap",
+    "solid": false,
+    "sprite": 16
+  },
+
+  "spikesH": {
+    "behavior": "trap_horz",
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Spikes Horizontal",
+    "role": "trap",
+    "solid": false,
+    "sprite": 18
+  },
+
+  "spikesV": {
+    "behavior": "trap_vert",
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Spikes Vertical",
+    "role": "trap",
+    "solid": false,
+    "sprite": 19
+  },
+
+  "heart": {
+    "data": {
+      "cost": 1,
+      "heal": 1
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Heart",
+    "role": "restore_health",
+    "solid": false,
+    "sprite": 11
+  },
+
+  "elixir_health": {
+    "data": {
+      "cost": 5,
+      "heal": 5
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Elixir of Health",
+    "role": "restore_health",
+    "solid": false,
+    "sprite": 13
+  },
+
+  "elixir_magic": {
+    "data": {
+      "cost": 9,
+      "pickup": {
+        "amount": 3,
+        "type": "magic"
+      }
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Elixir of Magic",
+    "role": "pickup",
+    "solid": false,
+    "sprite": 14
+  },
+
+  "elixir_cure": {
+    "data": {
+      "cost": 5,
+      "cure": 25
+    },
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Elixir of Cure",
+    "role": "cure_poison",
+    "solid": false,
+    "sprite": 12
+  },
+
+  "candles": {
+    "data": {
+      "loot": "loot_doodad"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Candles",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 33
+  },
+
+  "altar": {
+    "data": {
+      "loot": "loot_doodad"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Altar",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 44
+  },
+
+  "pot": {
+    "data": {
+      "loot": "loot_pot"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Pot",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 34
+  },
+
+  "chest": {
+    "data": {
+      "loot": "loot_chest"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Chest",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 35
+  },
+
+  "crate": {
+    "data": {
+      "loot": "loot_crate"
+    },
+    "drawOrder": 1,
+    "health": 1,
+    "name": "Crate",
+    "role": "doodad",
+    "solid": true,
+    "sprite": 34
+  },
+
+  "ghost": {
+    "behavior": "hunt",
+    "drawOrder": 3,
+    "health": null,
+    "name": "Ghost",
+    "role": "trap",
+    "solid": false,
+    "sprite": 13
+  },
+
+  "stairsDown": {
+    "data": {
+      "warp": "down"
+    },
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Stairs Down",
+    "role": "warp",
+    "solid": false,
+    "sprite": 24,
+    "flat": true
+  },
+
+  "stairsUp": {
+    "data": {
+      "warp": "up"
+    },
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Stairs Up",
+    "role": "warp",
+    "solid": false,
+    "sprite": 25
+  },
+
+  "flame": {
+    "drawOrder": 2,
+    "health": 1,
+    "name": "Campfire",
+    "role": "trap",
+    "solid": false,
+    "sprite": 23
+  },
+
+  "monsterSpawn": {
+    "drawOrder": 0,
+    "health": 1,
+    "name": "Monster Spawn",
+    "solid": false,
+    "sprite": -1
+  },
+
+  "shopkeeper": {
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Shopkeeper",
+    "role": "monster",
+    "solid": true,
+    "sprite": 38
+  },
+
+  "spider": {
+    "behavior": "hunt",
+    "data": {
+      "loot": "loot_monster"
+    },
+    "drawOrder": 3,
+    "health": 1,
+    "name": "Spider",
+    "role": "monster",
+    "solid": true,
+    "sprite": 48
+  }
+}

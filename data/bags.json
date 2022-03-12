@@ -1,0 +1,71 @@
+{
+  "rooms_start_U": ["U_tiny"],
+  "rooms_start_I": ["I_tiny"],
+  "rooms_start_L": ["L_tiny"],
+  "rooms_start_T": ["T_tiny"],
+  "rooms_start_X": ["X_tiny"],
+
+  "rooms_end_U": ["U_cozy"],
+  "rooms_end_I": ["I_cozy"],
+  "rooms_end_L": ["L_cozy"],
+  "rooms_end_T": ["T_cozy"],
+  "rooms_end_X": ["X_cozy"],
+
+  "rooms_generic_U": ["U_big", "U_circle", "U_diamond"],
+  "rooms_generic_I": ["I_big", "I_hallway", "I_cozy", "I_zig"],
+  "rooms_generic_L": ["L_big", "L_hallway", "L_cozy", "L_maze"],
+  "rooms_generic_T": ["T_big", "T_hallway", "T_cozy"],
+  "rooms_generic_X": ["X_big", "X_hallway", "X_cozy"],
+
+  "doors": ["door", "door", "door", "spikes", "mote_poison"],
+
+  "treasure": [
+    "coin",
+    "coin",
+    "heart",
+    "mote_magic",
+    "mote_cure",
+    "crate",
+    "crate",
+    "chest"
+  ],
+
+  "monsters": [
+    "slime_orange",
+    "slime_orange",
+    "slime_orange",
+    "slime_green",
+    "slime_green",
+    "slime_blue"
+  ],
+
+  "loot_chest": ["key", "elixir_health", "elixir_magic", "elixir_cure"],
+
+  "loot_crate": [
+    "key",
+    "heart",
+    "heart",
+    "coin",
+    "coin",
+    "mote_magic",
+    "mote_cure"
+  ],
+
+  "loot_monster": ["", "", "", "", "", "", "", "heart", "coin"],
+
+  "loot_orange": ["", "", "", "", "", "", "mote_cure", "mote_cure", "coin"],
+
+  "loot_blue": ["", "", "", "", "", "", "mote_magic", "mote_magic", "coin"],
+
+  "loot_green": ["", "", "", "", "", "", "mote_poison", "mote_poison", "coin"],
+
+  "shop": [
+    "key",
+    "heart",
+    "mote_magic",
+    "mote_cure",
+    "elixir_health",
+    "elixir_magic",
+    "elixir_cure"
+  ]
+}
