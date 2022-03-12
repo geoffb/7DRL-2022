@@ -13,21 +13,34 @@ jobs:
       - name: 🛎️ Checkout
         uses: actions/checkout@v2
 
-      - name: 🔧 Install dependencies
+      - name: 🔧 Install
         run: yarn
 
-      - name: 👕 Lint source files
+      - name: 👕 Lint
         run: yarn lint
 
-      - name: 🧼 Clean build artifacts
+      - name: 🧼 Clean
         run: yarn clean
 
-      - name: 🏗️ Build packages
+      - name: 🏗️ Build
         run: yarn build
 
-      - name: 🚀 Deploy
+      - name: 📦 Package
+        run: yarn zip
+
+      - name: 🚀 Deploy (GitHub Pages)
         if: github.ref == 'refs/heads/main'
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
           branch: gh-pages
           folder: htdocs
+
+      - name: 🚀 Deploy (itch.io)
+        if: github.ref == 'refs/heads/main'
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: web
+          ITCH_GAME: sewermancer
+          ITCH_USER: gosub
+          PACKAGE: dist/build.zip
