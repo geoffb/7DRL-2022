@@ -176,6 +176,9 @@ export class WorldScene extends Scene {
       ) {
         this.suppressInput(150);
         this.world.movePlayer(Direction.Down);
+      } else if (this.keyboard.getKeyState(32)) {
+        this.suppressInput(150);
+        this.world.activatePlayerSkill();
       }
     }
 
@@ -251,6 +254,10 @@ export class WorldScene extends Scene {
     this.actionQueue.handle(
       WorldAction.PlayerHumanityRestore,
       this.animatePlayerHumanityRestore.bind(this)
+    );
+    this.actionQueue.handle(
+      WorldAction.Combust,
+      this.animateCombust.bind(this)
     );
 
     this.tilesets = {
@@ -778,6 +785,37 @@ export class WorldScene extends Scene {
 
   private async animatePlayerHumanityRestore() {
     this.showMessage("Humanity restored!", "powerup10");
+  }
+
+  private async animateCombust(positions: IPoint[]): Promise<void> {
+    for (const pos of positions) {
+      this.spawnEffect(pos.x, pos.y, 17);
+    }
+    this.shake(this.worldView, 150, 4, 1);
+  }
+
+  private spawnEffect(x: number, y: number, sprite: number): void {
+    const effect = new Sprite(this.sprites, sprite);
+    effect.position.x = mapX(x);
+    effect.position.y = mapY(y);
+    this.unitLayer.addChild(effect);
+    this.tweens
+      .create(effect)
+      .to(
+        {
+          opacity: 0,
+          rotation: Math.PI,
+        },
+        150
+      )
+      .call(() => effect.dispose());
+    this.tweens.create(effect.scale).to(
+      {
+        x: 2,
+        y: 2,
+      },
+      150
+    );
   }
 
   private async animateIntro() {

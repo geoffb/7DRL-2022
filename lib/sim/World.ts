@@ -5,6 +5,7 @@ import {
   manhattanDistance,
   Random,
   Vector2,
+  distance,
 } from "@mousepox/math";
 import { BagSet } from "./BagSet";
 import { Inventory } from "./Inventory";
@@ -31,6 +32,7 @@ export const enum WorldAction {
   PlayerInventoryChange,
   PlayerStarve,
   PlayerHumanityRestore,
+  Combust,
 }
 
 export const enum Direction {
@@ -233,6 +235,49 @@ export class World {
 
   public createUnit(type: string): Unit {
     return new Unit(type, this.getUnitInfo(type));
+  }
+
+  public activatePlayerSkill(): void {
+    if (this.over) {
+      return;
+    }
+
+    if (this.removePlayerInventory("magic", 1)) {
+      const px = this.player.position.x;
+      const py = this.player.position.y;
+      const radius = 2;
+      const sx = this.player.position.x - radius;
+      const sy = this.player.position.y - radius;
+      const size = radius * 2 + 1;
+      const positions: IPoint[] = [];
+      this.map.forEachInArea(sx, sy, size, size, (value, x, y) => {
+        if (value !== 0 || (x === px && y === py)) {
+          return;
+        }
+        if (distance(px, py, x, y) <= radius) {
+          positions.push({ x, y });
+          const units = this.getUnitsAt(x, y);
+          for (const unit of units) {
+            if (
+              unit.info.role === UnitRole.Player ||
+              unit.info.role === UnitRole.Warp
+            ) {
+              return;
+            }
+            this.damageUnit(unit, 1);
+          }
+        }
+        this.onAction(WorldAction.Combust, positions);
+      });
+    } else {
+      this.onAction(WorldAction.UnitNegate, this.player, {
+        x: this.player.position.x,
+        y: this.player.position.y - 1,
+      });
+    }
+
+    this.steps++;
+    this.onAction(WorldAction.StepAwait);
   }
 
   public movePlayer(direction: Direction) {
